@@ -12,6 +12,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" NoWarn="NU1605"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.7" NoWarn="NU1605"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-rc.1.24451.1" />
         <PackageReference Include="Microsoft.Identity.Web" Version="2.15.2"/>
         <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="2.15.2"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
@@ -21,6 +22,12 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+      <Folder Include="Repositories\" />
+      <Folder Include="Services\" />
     </ItemGroup>
 
 </Project>
