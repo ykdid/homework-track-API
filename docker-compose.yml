@@ -1,0 +1,33 @@
+﻿version: '3.8'
+
+services:
+  homework-track-api:
+    image: homework-track-api
+    build:
+      context: .
+      dockerfile: Homework-track-API/Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=HomeworkTrackDb;Username=postgres;Password=1234homework
+    depends_on:
+      - postgres
+    command: >
+      sh -c "dotnet ef database update && dotnet Homework-track-API.dll"
+
+  postgres:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234homework
+      POSTGRES_DB: HomeworkTrackDb
+    ports:
+      - "5440:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
