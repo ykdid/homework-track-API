@@ -15,7 +15,9 @@ services:
     depends_on:
       - postgres
     command: >
-      sh -c "dotnet ef database update && dotnet Homework-track-API.dll"
+      sh -c "sleep 20 && dotnet ef database update && dotnet Homework-track-API.dll"
+    networks:
+      - homework-track-app-network 
 
   postgres:
     image: postgres:14
@@ -28,6 +30,11 @@ services:
       - "5440:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - homework-track-app-network  
 
 volumes:
   postgres_data:
+
+networks:
+  homework-track-app-network: 

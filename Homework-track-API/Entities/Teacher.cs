@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Homework_track_API.Entities;
 
 public class Teacher
 {
+    [Key]
     public int Id { get; set; }
     public string Name { get; set; }
     public string Surname { get; set; }
