@@ -34,7 +34,6 @@
       <Folder Include="Repositories\HomeworkRepository\" />
       <Folder Include="Repositories\StudentRepository\" />
       <Folder Include="Repositories\SubmissionRepository\" />
-      <Folder Include="Repositories\TeacherRepository\" />
       <Folder Include="Services\HomeworkService\" />
       <Folder Include="Services\StudentService\" />
       <Folder Include="Services\SubmissionService\" />

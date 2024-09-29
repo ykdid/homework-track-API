@@ -8,5 +8,4 @@ public enum HomeworkStatus
     Active,
     Expired,
     Deleted
-    
 }
