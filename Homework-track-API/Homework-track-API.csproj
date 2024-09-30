@@ -31,7 +31,6 @@
 
     <ItemGroup>
       <Folder Include="Migrations\" />
-      <Folder Include="Repositories\HomeworkRepository\" />
       <Folder Include="Repositories\SubmissionRepository\" />
       <Folder Include="Services\HomeworkService\" />
       <Folder Include="Services\StudentService\" />
