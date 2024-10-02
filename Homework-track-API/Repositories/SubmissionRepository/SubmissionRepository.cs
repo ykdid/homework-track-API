@@ -51,4 +51,18 @@ public class SubmissionRepository:ISubmissionRepository
         await _context.SaveChangesAsync();
         return submission;
     }
+
+    public async Task<List<Submission>> GetSubmissionsByStudentIdAsync(int id)
+    {
+        return await _context.Submissions
+            .Include(sb => sb.StudentId == id)
+            .ToListAsync();
+    }
+
+    public async Task<List<Submission>> GetSubmissionsByHomeworkIdAsync(int id)
+    {
+        return await _context.Submissions
+            .Include(sb => sb.HomeworkId == id)
+            .ToListAsync();
+    }
 }

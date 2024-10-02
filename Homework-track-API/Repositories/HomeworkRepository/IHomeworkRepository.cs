@@ -9,4 +9,5 @@ public interface IHomeworkRepository
     Task<Homework> CreateHomeworkAsync(Homework  homework);
     Task<bool> DeleteHomeworkByIdAsync(int id);
     Task<Homework> UpdateHomeworkAsync(Homework homework);
+    Task<List<Homework>> GetHomeworksByTeacherIdAsync(int id);
 }

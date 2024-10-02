@@ -51,4 +51,11 @@ public class HomeworkRepository:IHomeworkRepository
         await _context.SaveChangesAsync();
         return homework;
     }
+
+    public async Task<List<Homework>> GetHomeworksByTeacherIdAsync(int id)
+    {
+       return await _context.Homeworks
+            .Include(hw => hw.TeacherId == id)
+            .ToListAsync();
+    }
 }

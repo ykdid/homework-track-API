@@ -9,4 +9,7 @@ public interface ISubmissionRepository
     Task<Submission> CreateSubmissionAsync(Submission submission);
     Task<bool> DeleteSubmissionByIdAsync(int id);
     Task<Submission> UpdateSubmissionAsync(Submission submission);
+    Task<List<Submission>> GetSubmissionsByStudentIdAsync(int id);
+    Task<List<Submission>> GetSubmissionsByHomeworkIdAsync(int id);
+
 }
