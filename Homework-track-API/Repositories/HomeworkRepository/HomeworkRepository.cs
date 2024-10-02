@@ -1,5 +1,6 @@
 using Homework_track_API.Data;
 using Homework_track_API.Entities;
+using Homework_track_API.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Homework_track_API.Repositories.HomeworkRepository;
@@ -31,18 +32,25 @@ public class HomeworkRepository:IHomeworkRepository
         return homework;
     }
 
-    public async Task<bool> DeleteHomeworkByIdAsync(int id)
+    public async Task<bool> SoftDeleteHomeworkByIdAsync(int id)
     {
         var homework = await _context.Homeworks.FindAsync(id);
 
         if (homework !=  null)
         {
-            _context.Homeworks.Remove(homework);
+            homework.Status = HomeworkStatus.Deleted;
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
 
         return false;
+    }
+
+    public async Task<List<Homework>> GetExpiredHomeworksByTeacherIdAsync(int id)
+    {
+        return await _context.Homeworks
+            .Where(hw => hw.TeacherId == id && hw.Status == HomeworkStatus.Expired)
+            .ToListAsync();
     }
 
     public async Task<Homework> UpdateHomeworkAsync(Homework homework)
@@ -55,7 +63,9 @@ public class HomeworkRepository:IHomeworkRepository
     public async Task<List<Homework>> GetHomeworksByTeacherIdAsync(int id)
     {
        return await _context.Homeworks
-            .Where(hw => hw.TeacherId == id)
+            .Where(hw => hw.TeacherId == id && hw.Status == HomeworkStatus.Active)
             .ToListAsync();
     }
+    
+    
 }
