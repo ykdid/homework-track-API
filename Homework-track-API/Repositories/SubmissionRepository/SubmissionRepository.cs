@@ -55,7 +55,7 @@ public class SubmissionRepository:ISubmissionRepository
     public async Task<List<Submission>> GetSubmissionsByStudentIdAsync(int id)
     {
         return await _context.Submissions
-            .Include(sb => sb.StudentId == id)
+            .Where(sb => sb.StudentId == id)
             .ToListAsync();
     }
 
