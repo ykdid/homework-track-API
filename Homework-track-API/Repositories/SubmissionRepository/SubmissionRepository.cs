@@ -62,7 +62,7 @@ public class SubmissionRepository:ISubmissionRepository
     public async Task<List<Submission>> GetSubmissionsByHomeworkIdAsync(int id)
     {
         return await _context.Submissions
-            .Include(sb => sb.HomeworkId == id)
+            .Where(sb => sb.HomeworkId == id)
             .ToListAsync();
     }
 }

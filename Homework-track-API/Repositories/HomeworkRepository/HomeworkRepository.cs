@@ -55,7 +55,7 @@ public class HomeworkRepository:IHomeworkRepository
     public async Task<List<Homework>> GetHomeworksByTeacherIdAsync(int id)
     {
        return await _context.Homeworks
-            .Include(hw => hw.TeacherId == id)
+            .Where(hw => hw.TeacherId == id)
             .ToListAsync();
     }
 }
