@@ -1,5 +1,7 @@
 using Homework_track_API.Repositories.HomeworkRepository;
 using Homework_track_API.Entities;
+using Homework_track_API.Enums;
+
 namespace Homework_track_API.Services.HomeworkService;
 
 public class HomeworkService:IHomeworkService
@@ -18,11 +20,28 @@ public class HomeworkService:IHomeworkService
 
     public async Task<Homework> GetHomeworkById(int id)
     {
-        return await _homeworkRepository.GetHomeworkByIdAsync(id);
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid homework ID.");
+        }
+
+        var homework = await _homeworkRepository.GetHomeworkByIdAsync(id);
+        
+        if (homework == null)
+        {
+            throw new KeyNotFoundException($"Homework with ID {id} not found.");
+        }
+    
+        return homework;
     }
 
     public async Task<Homework> GetHomeworkByTeacherId(int id)
     {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid teacher ID.");
+        }
+        
         return await _homeworkRepository.GetHomeworkByIdAsync(id);
     }
 
@@ -32,16 +51,38 @@ public class HomeworkService:IHomeworkService
         {
             throw new ArgumentNullException(nameof(homework));
         }
+
+        if (string.IsNullOrEmpty(homework.Title))
+        {
+            throw new ArgumentException("Homework title cannot be empty.");
+        }
+
+        if (homework.ExpireDate < DateTime.Now)
+        {
+            throw new InvalidOperationException("Homework due date cannot be in the past.");
+        }
+
+        homework.Status = HomeworkStatus.Active;
+        
         return await _homeworkRepository.CreateHomeworkAsync(homework);
-    }
+    }       
 
     public async Task<bool> SoftDeleteHomeworkById(int id)
     {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid homework ID.");    
+        }
         var existingHomework = await _homeworkRepository.GetHomeworkByIdAsync(id);
 
         if (existingHomework == null)
         {
-            return false;
+            throw new KeyNotFoundException($"Homework with ID {id} not found.");
+        }
+        
+        if (existingHomework.Status == HomeworkStatus.Deleted)
+        {   
+            throw new InvalidOperationException("Homework is already deleted.");
         }
 
         return await _homeworkRepository.SoftDeleteHomeworkByIdAsync(id);
@@ -53,17 +94,44 @@ public class HomeworkService:IHomeworkService
         {
             throw new ArgumentNullException(nameof(homework));
         }
+        
+        var existingHomework = await _homeworkRepository.GetHomeworkByIdAsync(homework.Id);
+        
+        if (existingHomework == null)
+        {
+            throw new KeyNotFoundException($"Homework with ID {homework.Id} not found.");
+        }
+
+        if (homework.ExpireDate < DateTime.Now)
+        {
+            throw new InvalidOperationException("Cannot set a due date in the past.");
+        }
+
+        if (homework.Status !=  HomeworkStatus.Active)
+        {
+            throw new InvalidOperationException("Cannot update inactive homework.");
+        }
 
         return await _homeworkRepository.UpdateHomeworkAsync(homework);
     }
 
     public async Task<List<Homework>> GetHomeworksByTeacherId(int id)
     {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid teacher ID.");
+        }
+        
         return await _homeworkRepository.GetHomeworksByTeacherIdAsync(id);
     }
 
     public async Task<List<Homework>> GetExpiredHomeworksByTeacherId(int id)
     {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid teacher ID.");
+        }
+        
         return await _homeworkRepository.GetExpiredHomeworksByTeacherIdAsync(id);
     }
 }
