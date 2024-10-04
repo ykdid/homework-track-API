@@ -6,11 +6,11 @@ using Homework_track_API.Repositories.SubmissionRepository;
 
 namespace Homework_track_API.Services.SubmissionService;
 
-public class SubmissionService(SubmissionRepository submissionRepository , StudentRepository studentRepository , HomeworkRepository homeworkRepository) : ISubmissionService
+public class SubmissionService(ISubmissionRepository submissionRepository , IStudentRepository studentRepository , IHomeworkRepository homeworkRepository) : ISubmissionService
 {
-    private readonly SubmissionRepository _submissionRepository = submissionRepository;
-    private readonly StudentRepository _studentRepository = studentRepository;
-    private readonly HomeworkRepository _homeworkRepository = homeworkRepository;
+    private readonly ISubmissionRepository _submissionRepository = submissionRepository;
+    private readonly IStudentRepository _studentRepository = studentRepository;
+    private readonly IHomeworkRepository _homeworkRepository = homeworkRepository;
 
     public async Task<List<Submission>> GetAllSubmissions()
     {
