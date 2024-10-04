@@ -32,7 +32,6 @@
     <ItemGroup>
       <Folder Include="Migrations\" />
       <Folder Include="Services\SubmissionService\" />
-      <Folder Include="Services\TeacherService\" />
     </ItemGroup>
 
 </Project>
