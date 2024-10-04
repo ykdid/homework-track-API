@@ -16,7 +16,9 @@ public class HomeworkRepository:IHomeworkRepository
 
     public async Task<List<Homework>> GetAllHomeworksAsync()
     {
-        return await _context.Homeworks.ToListAsync();
+        return await _context.Homeworks
+            .Where(hw =>hw.Status == HomeworkStatus.Active)
+            .ToListAsync();
     }
 
     public async Task<Homework> GetHomeworkByIdAsync(int id)
