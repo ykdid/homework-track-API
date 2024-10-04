@@ -52,9 +52,14 @@ public class HomeworkService:IHomeworkService
             throw new ArgumentNullException(nameof(homework));
         }
 
-        if (string.IsNullOrEmpty(homework.Title))
+        if (string.IsNullOrEmpty(homework.Title) && homework.Title.Length < 3)
         {
-            throw new ArgumentException("Homework title cannot be empty.");
+            throw new ArgumentException("Homework title cannot be empty and should be long enough.");
+        }
+
+        if (string.IsNullOrEmpty(homework.Description) && homework.Description.Length > 10)
+        {
+            throw new ArgumentException("Homework description cannot be empty and should be long enough.");
         }
 
         if (homework.ExpireDate < DateTime.Now)
