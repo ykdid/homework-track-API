@@ -35,16 +35,7 @@ public class HomeworkService:IHomeworkService
         return homework;
     }
 
-    public async Task<Homework> GetHomeworkByTeacherId(int id)
-    {
-        if (id <= 0)
-        {
-            throw new ArgumentException("Invalid teacher ID.");
-        }
-        
-        return await _homeworkRepository.GetHomeworkByIdAsync(id);
-    }
-
+    
     public async Task<Homework> CreateHomework(Homework homework)
     {
         if (homework ==  null)
