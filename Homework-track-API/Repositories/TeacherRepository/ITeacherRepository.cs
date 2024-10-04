@@ -9,5 +9,5 @@ public interface ITeacherRepository
     Task<Teacher> CreateTeacherAsync(Teacher teacher);
     Task<bool> DeleteTeacherAsync(int id);
     Task<Teacher> GetTeacherByIdAsync(int id);
-    Task<Teacher> UpdateTeacherByIdAsync(Teacher teacher);
+    Task<Teacher> UpdateTeacherAsync(Teacher teacher);
 }   

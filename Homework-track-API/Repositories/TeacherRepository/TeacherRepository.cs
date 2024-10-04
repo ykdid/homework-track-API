@@ -44,7 +44,7 @@ public class TeacherRepository:ITeacherRepository
         return await _context.Teachers.FindAsync(id); 
     }
 
-    public async Task<Teacher> UpdateTeacherByIdAsync(Teacher teacher)
+    public async Task<Teacher> UpdateTeacherAsync(Teacher teacher)
     {
         _context.Teachers.Update(teacher);
         await _context.SaveChangesAsync();
