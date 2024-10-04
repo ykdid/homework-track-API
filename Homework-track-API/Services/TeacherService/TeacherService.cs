@@ -3,15 +3,10 @@ using Homework_track_API.Repositories.TeacherRepository;
 
 namespace Homework_track_API.Services.TeacherService;
 
-public class TeacherService:ITeacherService
+public class TeacherService(ITeacherRepository teacherRepository):ITeacherService
 {
-    private readonly TeacherRepository _teacherRepository;
-
-    public TeacherService(TeacherRepository teacherRepository)
-    {
-        _teacherRepository = teacherRepository;
-    }
-
+    private readonly ITeacherRepository _teacherRepository = teacherRepository;
+    
     public async Task<IEnumerable<Teacher>> GetAllTeachers()
     {
         return await _teacherRepository.GetAllTeachersAsync();
