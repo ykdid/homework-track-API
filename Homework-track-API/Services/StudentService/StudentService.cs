@@ -3,15 +3,10 @@ using Homework_track_API.Entities;
 
 namespace Homework_track_API.Services.StudentService;
 
-public class StudentService:IStudentService
+public class StudentService(IStudentRepository studentRepository):IStudentService
 {
-    private readonly StudentRepository _studentRepository;
-
-    public StudentService(StudentRepository studentRepository)
-    {
-        _studentRepository = studentRepository;
-    }
-
+    private readonly IStudentRepository _studentRepository = studentRepository;
+    
     public async Task<IEnumerable<Student>> GetAllStudents()
     {
         return await _studentRepository.GetAllStudentsAsync();
