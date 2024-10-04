@@ -1,17 +1,16 @@
 using Homework_track_API.Repositories.HomeworkRepository;
 using Homework_track_API.Entities;
 using Homework_track_API.Enums;
+using Homework_track_API.Repositories.TeacherRepository;
+using ArgumentException = System.ArgumentException;
 
 namespace Homework_track_API.Services.HomeworkService;
 
-public class HomeworkService:IHomeworkService
+public class HomeworkService(IHomeworkRepository homeworkRepository , ITeacherRepository teacherRepository):IHomeworkService
 {
-    private readonly IHomeworkRepository _homeworkRepository;
-
-    public HomeworkService(IHomeworkRepository homeworkRepository)
-    {
-        _homeworkRepository = homeworkRepository;
-    }
+    private readonly IHomeworkRepository _homeworkRepository = homeworkRepository;
+    private readonly ITeacherRepository _teacherRepository = teacherRepository;
+    
 
     public async Task<List<Homework>> GetAllHomeworks()
     {
@@ -117,6 +116,13 @@ public class HomeworkService:IHomeworkService
         {
             throw new ArgumentException("Invalid teacher ID.");
         }
+
+        var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+
+        if (teacher == null)
+        {
+            throw new ArgumentException($"Teacher with ID {teacher.Id} not found.");
+        }
         
         return await _homeworkRepository.GetHomeworksByTeacherIdAsync(id);
     }
@@ -126,6 +132,13 @@ public class HomeworkService:IHomeworkService
         if (id <= 0)
         {
             throw new ArgumentException("Invalid teacher ID.");
+        }
+        
+        var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+
+        if (teacher == null)
+        {
+            throw new ArgumentException($"Teacher with ID {teacher.Id} not found.");
         }
         
         return await _homeworkRepository.GetExpiredHomeworksByTeacherIdAsync(id);
