@@ -4,6 +4,9 @@ using Homework_track_API.Repositories.StudentRepository;
 using Homework_track_API.Repositories.SubmissionRepository;
 using Homework_track_API.Repositories.TeacherRepository;
 using Homework_track_API.Services.HomeworkService;
+using Homework_track_API.Services.StudentService;
+using Homework_track_API.Services.SubmissionService;
+using Homework_track_API.Services.TeacherService;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +27,10 @@ builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 
 builder.Services.AddScoped<IHomeworkService, HomeworkService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+
 
 
 builder.Services.AddCors(options =>
