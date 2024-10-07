@@ -7,14 +7,9 @@ namespace Homework_track_API.Controllers{
     [Route("api/[controller]")]
     [ApiController]
 
-    public class TeacherController:ControllerBase
+    public class TeacherController(ITeacherService teacherService):ControllerBase
     {
-        private readonly ITeacherService _teacherService;
-
-        public TeacherController(ITeacherService teacherService)
-        {
-            _teacherService = teacherService;
-        }
+        private readonly ITeacherService _teacherService = teacherService;
         
         [HttpGet("getAllTeachers")]
         public async Task<IActionResult> GetAllTeachers()
