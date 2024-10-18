@@ -7,14 +7,17 @@ public class Homework
 {
     [Key]
     public int Id { get; set; }
-    public int TeacherId { get; set; }
-    public string Title { get; set; }
+    [Required]
+    public int CourseId { get; set; }
+    [Required]
+    public string Title { get; set; }   
     public DateTime InitialDate { get; set; }
+    [Required]
     public DateTime ExpireDate { get; set; }
     [MaxLength(10000)]
     public string? Description { get; set; }
-    public string? HomeworkImagePath { get; set; }
-    public string? HomeworkDocumentationPath { get; set; }
+    public string? ImagePath { get; set; }
+    public string? DocumentationPath { get; set; }
     public HomeworkStatus Status { get; set; } = HomeworkStatus.Active;
 
 }
