@@ -48,10 +48,10 @@ public class HomeworkRepository:IHomeworkRepository
         return false;
     }
 
-    public async Task<List<Homework>> GetExpiredHomeworksByTeacherIdAsync(int id)
+    public async Task<List<Homework>> GetExpiredHomeworksByCourseIdAsync(int id)
     {
         return await _context.Homeworks
-            .Where(hw => hw.TeacherId == id && hw.Status == HomeworkStatus.Expired)
+            .Where(hw => hw.CourseId == id && hw.Status == HomeworkStatus.Expired)
             .ToListAsync();
     }
 
@@ -62,10 +62,10 @@ public class HomeworkRepository:IHomeworkRepository
         return homework;
     }
 
-    public async Task<List<Homework>> GetHomeworksByTeacherIdAsync(int id)
+   public async Task<List<Homework>> GetHomeworksByCourseIdAsync(int id)
     {
        return await _context.Homeworks
-            .Where(hw => hw.TeacherId == id && hw.Status == HomeworkStatus.Active)
+            .Where(hw => hw.CourseId == id && hw.Status == HomeworkStatus.Active)
             .ToListAsync();
     }
     

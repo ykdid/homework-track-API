@@ -8,7 +8,7 @@ public interface IHomeworkRepository
     Task<Homework> GetHomeworkByIdAsync(int id);
     Task<Homework> CreateHomeworkAsync(Homework  homework);
     Task<bool> SoftDeleteHomeworkByIdAsync(int id);
-    Task<List<Homework>> GetExpiredHomeworksByTeacherIdAsync(int id);
+    Task<List<Homework>> GetExpiredHomeworksByCourseIdAsync(int id);
     Task<Homework> UpdateHomeworkAsync(Homework homework);
-    Task<List<Homework>> GetHomeworksByTeacherIdAsync(int id);
+   Task<List<Homework>> GetHomeworksByCourseIdAsync(int id);
 }
