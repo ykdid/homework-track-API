@@ -22,6 +22,41 @@ namespace Homework_track_API.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Homework_track_API.Entities.Course", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("Course", "Courses");
+                });
+
             modelBuilder.Entity("Homework_track_API.Entities.Homework", b =>
                 {
                     b.Property<int>("Id")
@@ -30,17 +65,20 @@ namespace Homework_track_API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Description")
                         .HasMaxLength(10000)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DocumentationPath")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("ExpireDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("HomeworkDocumentationPath")
-                        .HasColumnType("text");
-
-                    b.Property<string>("HomeworkImagePath")
+                    b.Property<string>("ImagePath")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("InitialDate")
@@ -49,14 +87,13 @@ namespace Homework_track_API.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
 
                     b.ToTable("Homework", "Operations");
                 });
@@ -84,10 +121,6 @@ namespace Homework_track_API.Migrations
                     b.Property<string>("ProfileImagePath")
                         .HasColumnType("text");
 
-                    b.Property<string>("StudentNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("text");
@@ -95,6 +128,21 @@ namespace Homework_track_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Student", "Users");
+                });
+
+            modelBuilder.Entity("Homework_track_API.Entities.StudentCourse", b =>
+                {
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("StudentId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("StudentCourse", "Courses");
                 });
 
             modelBuilder.Entity("Homework_track_API.Entities.Submission", b =>
@@ -106,6 +154,9 @@ namespace Homework_track_API.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("HomeworkId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Mark")
                         .HasColumnType("integer");
 
                     b.Property<int>("StudentId")
@@ -149,6 +200,60 @@ namespace Homework_track_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Teacher", "Users");
+                });
+
+            modelBuilder.Entity("Homework_track_API.Entities.Course", b =>
+                {
+                    b.HasOne("Homework_track_API.Entities.Teacher", null)
+                        .WithMany("Courses")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Homework_track_API.Entities.Homework", b =>
+                {
+                    b.HasOne("Homework_track_API.Entities.Course", null)
+                        .WithMany("Homeworks")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Homework_track_API.Entities.StudentCourse", b =>
+                {
+                    b.HasOne("Homework_track_API.Entities.Course", "Course")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Homework_track_API.Entities.Student", "Student")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Homework_track_API.Entities.Course", b =>
+                {
+                    b.Navigation("Homeworks");
+
+                    b.Navigation("StudentCourses");
+                });
+
+            modelBuilder.Entity("Homework_track_API.Entities.Student", b =>
+                {
+                    b.Navigation("StudentCourses");
+                });
+
+            modelBuilder.Entity("Homework_track_API.Entities.Teacher", b =>
+                {
+                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }

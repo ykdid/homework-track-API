@@ -15,6 +15,8 @@ namespace Homework_track_API.Data
         public DbSet<Student> Students { get; set; } 
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Submission> Submissions { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<StudentCourse> StudentCourses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,6 +33,12 @@ namespace Homework_track_API.Data
             
             modelBuilder.Entity<Submission>()
                 .ToTable("Submission", schema: "Operations");
+
+            modelBuilder.Entity<Course>()
+                .ToTable("Course", schema: "Courses");
+            
+            modelBuilder.Entity<StudentCourse>()
+                .ToTable("StudentCourse", schema: "Courses");
             
             
             modelBuilder.Entity<Teacher>()
@@ -54,7 +62,20 @@ namespace Homework_track_API.Data
                 .HasColumnType("integer") 
                 .HasConversion(
                     v => (int)v, 
-                    v => (HomeworkStatus)v); 
+                    v => (HomeworkStatus)v);
+            
+            modelBuilder.Entity<StudentCourse>()
+                .HasKey(sc => new { sc.StudentId, sc.CourseId });
+
+            modelBuilder.Entity<StudentCourse>()
+                .HasOne(sc => sc.Student)
+                .WithMany(s => s.StudentCourses)
+                .HasForeignKey(sc => sc.StudentId);
+
+            modelBuilder.Entity<StudentCourse>()
+                .HasOne(sc => sc.Course)
+                .WithMany(c => c.StudentCourses)
+                .HasForeignKey(sc => sc.CourseId);
         }
     }
 }
