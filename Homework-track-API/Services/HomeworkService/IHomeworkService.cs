@@ -9,6 +9,6 @@ public interface IHomeworkService
     Task<Homework> CreateHomework(Homework homework);
     Task<bool> SoftDeleteHomeworkById(int id);
     Task<Homework> UpdateHomework(Homework homework);
-    Task<List<Homework>> GetHomeworksByTeacherId(int id);
-    Task<List<Homework>> GetExpiredHomeworksByTeacherId(int id);
+    Task<List<Homework>> GetHomeworksByCourseId(int id);
+    Task<List<Homework>> GetExpiredHomeworksByCourseId(int id);
 }

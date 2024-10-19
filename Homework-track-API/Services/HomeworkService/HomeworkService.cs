@@ -1,15 +1,16 @@
 using Homework_track_API.Repositories.HomeworkRepository;
 using Homework_track_API.Entities;
 using Homework_track_API.Enums;
+using Homework_track_API.Repositories.CourseRepository;
 using Homework_track_API.Repositories.TeacherRepository;
 using ArgumentException = System.ArgumentException;
 
 namespace Homework_track_API.Services.HomeworkService;
 
-public class HomeworkService(IHomeworkRepository homeworkRepository , ITeacherRepository teacherRepository):IHomeworkService
+public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRepository courseRepository):IHomeworkService
 {
     private readonly IHomeworkRepository _homeworkRepository = homeworkRepository;
-    private readonly ITeacherRepository _teacherRepository = teacherRepository;
+    private readonly ICourseRepository _courseRepository = courseRepository;
     
 
     public async Task<List<Homework>> GetAllHomeworks()
@@ -110,37 +111,37 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ITeacherRe
         return await _homeworkRepository.UpdateHomeworkAsync(homework);
     }
 
-    public async Task<List<Homework>> GetHomeworksByTeacherId(int id)
+    public async Task<List<Homework>> GetHomeworksByCourseId(int id)
     {
         if (id <= 0)
         {
-            throw new ArgumentException("Invalid teacher ID.");
+            throw new ArgumentException("Invalid course ID.");
         }
 
-        var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+        var course = await _courseRepository.GetCourseByIdAsync(id);
 
-        if (teacher == null)
+        if (course == null)
         {
-            throw new ArgumentException($"Teacher with ID {teacher.Id} not found.");
+            throw new ArgumentException($"Course with ID {course.Id} not found.");
         }
         
-        return await _homeworkRepository.GetHomeworksByTeacherIdAsync(id);
+        return await _homeworkRepository.GetHomeworksByCourseIdAsync(id);
     }
 
-    public async Task<List<Homework>> GetExpiredHomeworksByTeacherId(int id)
+    public async Task<List<Homework>> GetExpiredHomeworksByCourseId(int id)
     {
         if (id <= 0)
         {
-            throw new ArgumentException("Invalid teacher ID.");
+            throw new ArgumentException("Invalid course ID.");
         }
         
-        var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+        var course = await _courseRepository.GetCourseByIdAsync(id);
 
-        if (teacher == null)
+        if (course == null)
         {
-            throw new ArgumentException($"Teacher with ID {teacher.Id} not found.");
+            throw new ArgumentException($"Course with ID {course.Id} not found.");
         }
         
-        return await _homeworkRepository.GetExpiredHomeworksByTeacherIdAsync(id);
+        return await _homeworkRepository.GetExpiredHomeworksByCourseIdAsync(id);
     }
 }
