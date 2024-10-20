@@ -36,8 +36,20 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
     }
 
     
-    public async Task<Homework> CreateHomework(Homework homework)
+    public async Task<Homework> CreateHomework(int courseId, Homework homework)
     {
+        if (courseId <=  0)
+        {
+            throw new ArgumentException("Invalid course ID.");
+        }
+
+        var course = await _courseRepository.GetCourseByIdAsync(courseId);
+
+        if (course == null)
+        {
+            throw new KeyNotFoundException($"Course with ID {courseId} not found.");
+        }
+        
         if (homework ==  null)
         {
             throw new ArgumentNullException(nameof(homework));
@@ -59,6 +71,7 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
         }
 
         homework.Status = HomeworkStatus.Active;
+        homework.CourseId = courseId;
         
         return await _homeworkRepository.CreateHomeworkAsync(homework);
     }       
