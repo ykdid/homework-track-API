@@ -102,7 +102,7 @@ public class CourseService(ICourseRepository courseRepository):ICourseService
         return course;
     }
 
-    public async Task<Course> UpdateCourse(int id, Course course)
+    public async Task<Course> UpdateCourseById(int id, Course course)
     {
         if (id <= 0)
         {

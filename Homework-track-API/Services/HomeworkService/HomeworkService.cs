@@ -98,7 +98,7 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
         return await _homeworkRepository.SoftDeleteHomeworkByIdAsync(id);
     }
 
-    public async Task<Homework> UpdateHomework(int id ,Homework homework)
+    public async Task<Homework> UpdateHomeworkById(int id ,Homework homework)
     {
         if (id <= 0)
         {
