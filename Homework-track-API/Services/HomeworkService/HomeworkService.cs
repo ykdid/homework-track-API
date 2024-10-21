@@ -36,7 +36,7 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
     }
 
     
-    public async Task<Homework> CreateHomework(int courseId, Homework homework)
+    public async Task<Homework> CreateHomeworkByCourseId(int courseId, Homework homework)
     {
         if (courseId <=  0)
         {
@@ -72,6 +72,7 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
 
         homework.Status = HomeworkStatus.Active;
         homework.CourseId = courseId;
+        homework.InitialDate = DateTime.Now;
         
         return await _homeworkRepository.CreateHomeworkAsync(homework);
     }       
@@ -97,14 +98,14 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
         return await _homeworkRepository.SoftDeleteHomeworkByIdAsync(id);
     }
 
-    public async Task<Homework> UpdateHomework(Homework homework)
+    public async Task<Homework> UpdateHomework(int id ,Homework homework)
     {
-        if (homework == null)
+        if (id <= 0)
         {
-            throw new ArgumentNullException(nameof(homework));
+            throw new ArgumentException("Invalid homework ID.");
         }
         
-        var existingHomework = await _homeworkRepository.GetHomeworkByIdAsync(homework.Id);
+        var existingHomework = await _homeworkRepository.GetHomeworkByIdAsync(id);
         
         if (existingHomework == null)
         {
@@ -121,7 +122,21 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
             throw new InvalidOperationException("Cannot update inactive homework.");
         }
 
-        return await _homeworkRepository.UpdateHomeworkAsync(homework);
+        if (!string.IsNullOrEmpty(homework.Title))
+        {
+            existingHomework.Title = homework.Title;
+        }
+        
+        if (homework.ExpireDate != DateTime.MinValue)
+        {
+            existingHomework.ExpireDate = homework.ExpireDate;
+        }
+
+        existingHomework.ImagePath = !string.IsNullOrEmpty(homework.ImagePath) ? homework.ImagePath : existingHomework.ImagePath;
+        existingHomework.DocumentationPath = !string.IsNullOrEmpty(homework.DocumentationPath) ? homework.DocumentationPath : existingHomework.DocumentationPath;
+        
+        
+        return await _homeworkRepository.UpdateHomeworkAsync(existingHomework);
     }
 
     public async Task<List<Homework>> GetHomeworksByCourseId(int id)

@@ -121,15 +121,10 @@ public class CourseService(ICourseRepository courseRepository):ICourseService
             existedCourse.Name = course.Name;
         }
         
-        existedCourse.ImagePath = course.ImagePath ?? existedCourse.ImagePath;
-        existedCourse.Description = course.Description ?? existedCourse.Description;
-        course.Code = existedCourse.Code;
-        course.Homeworks = existedCourse.Homeworks;
-        course.StudentCourses = existedCourse.StudentCourses;
-        course.Status = existedCourse.Status;
-        course.TeacherId = existedCourse.TeacherId;
-
-        return await _courseRepository.UpdateCourseAsync(course);
+        existedCourse.ImagePath = !string.IsNullOrEmpty(course.ImagePath) ? course.ImagePath : existedCourse.ImagePath;
+        existedCourse.Description = !string.IsNullOrEmpty(course.Description) ? course.Description : existedCourse.Description;
+        
+        return await _courseRepository.UpdateCourseAsync(existedCourse);
     }
 
     public async Task<bool> SoftDeleteCourseById(int id)
