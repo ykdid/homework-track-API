@@ -1,6 +1,7 @@
 using Homework_track_API.Services.TeacherService;
 using Microsoft.AspNetCore.Mvc;
 using Homework_track_API.Entities;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Homework_track_API.Controllers{
 
@@ -18,7 +19,7 @@ namespace Homework_track_API.Controllers{
             {
                 var teachers = await _teacherService.GetAllTeachers();
                                 
-                if (teachers == null || !teachers.Any())
+                if (teachers.IsNullOrEmpty() || !teachers.Any())
                 {
                     return NoContent();
                 }
@@ -101,8 +102,8 @@ namespace Homework_track_API.Controllers{
             try
             {
 
-                var updatedSTeacher = await _teacherService.UpdateTeacher(teacher);
-                return Ok(updatedSTeacher);
+                var updatedTeacher = await _teacherService.UpdateTeacher(teacher);
+                return Ok(updatedTeacher);
 
             }
             catch (KeyNotFoundException e)
