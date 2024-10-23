@@ -30,7 +30,7 @@ public class CourseRepository:ICourseRepository
     public async Task<List<Course>> GetCoursesByTeacherId(int id)
     {
         return await _context.Courses
-            .Where(c => c.TeacherId == id)  
+            .Where(c => c.TeacherId == id)   
             .ToListAsync();
     }
     
