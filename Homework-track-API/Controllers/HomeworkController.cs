@@ -144,7 +144,7 @@ namespace Homework_track_API.Controllers
             {
                 return StatusCode(500, $"Internal server error: {e.Message}");
             }
-        }
+        } 
         
     }
 }
