@@ -160,6 +160,31 @@ namespace Homework_track_API.Controllers{
                 return StatusCode(500, $"Internal server error: {e.Message}");
             }
         }
+
+        [HttpPatch("updateMarkBySubmission{submissionId}")]
+        public async Task<IActionResult> UpdateMarkBySubmissionId(int submissionId, int mark)
+        {
+            if (submissionId <= 0)
+            {
+                 if (mark < 0 || mark > 100)
+                 {
+                     return BadRequest();
+                 }
+            }
+            try
+            {
+                var submission = await _submissionService.UpdateMarkBySubmissionId(submissionId,mark);
+                return Ok(submission);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Internal server error: {e.Message}");
+            }
+        }
         
         
     }
