@@ -68,16 +68,6 @@ public class StudentService(IStudentRepository studentRepository):IStudentServic
             throw new ArgumentException("Name and surname should not contain spaces.");
         }
         
-        if (string.IsNullOrEmpty(student.StudentNumber))
-        {
-            throw new ArgumentException("Student number cannot be empty.");
-        }
-
-        if (student.StudentNumber.Length != 9 && !student.StudentNumber.All(char.IsDigit))
-        {
-            throw new ArgumentException("Student number should be 9-digit numeric value.");
-        }
-
         await _studentRepository.CreateStudentAsync(student);
         return student;
     }
@@ -114,18 +104,6 @@ public class StudentService(IStudentRepository studentRepository):IStudentServic
         if (!string.IsNullOrWhiteSpace(student.Password))
         {
             existingStudent.Password = student.Password; 
-        }
-
-        if (!string.IsNullOrWhiteSpace(student.StudentNumber))
-        {
-            if (student.StudentNumber.Length == 9 && student.StudentNumber.All(char.IsDigit))
-            {
-                existingStudent.StudentNumber = student.StudentNumber;
-            }
-            else
-            {
-                throw new ArgumentException("Student number should be a 9-digit numeric value.");
-            }
         }
         
         if (!string.IsNullOrWhiteSpace(student.ProfileImagePath))
