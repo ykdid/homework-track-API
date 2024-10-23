@@ -1,13 +1,15 @@
 using Homework_track_API.Entities;
 using Homework_track_API.Enums;
 using Homework_track_API.Repositories.CourseRepository;
+using Homework_track_API.Repositories.TeacherRepository;
 using ArgumentException = System.ArgumentException;
 
 namespace Homework_track_API.Services.CourseService;
 
-public class CourseService(ICourseRepository courseRepository):ICourseService
+public class CourseService(ICourseRepository courseRepository , ITeacherRepository teacherRepository):ICourseService
 {
     private readonly ICourseRepository _courseRepository = courseRepository;
+    private readonly ITeacherRepository _teacherRepository = teacherRepository;
 
     public async Task<List<Course>> GetAllCourses()
     {
@@ -31,8 +33,36 @@ public class CourseService(ICourseRepository courseRepository):ICourseService
         return course;
     }
 
-    public async Task<Course> CreateCourse(Course course)
+    public async Task<List<Course>> GetCoursesByTeacherId(int id)
     {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid teacher ID.");
+        }
+
+        var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+
+        if (teacher == null)
+        {
+            throw new KeyNotFoundException($"Teacher with ID {id} not found.");
+        }
+
+        var courses = await _courseRepository.GetCoursesByTeacherId(id);
+
+        if (courses.Count == 0)
+        {
+            throw new Exception("Empty course list.");
+        }
+
+        return courses;
+    }
+
+    public async Task<Course> CreateCourseByTeacherId(int id,Course course)
+    {
+        if (id != course.TeacherId)
+        {
+            throw new Exception("Id and TeacherId did not match.");
+        }
         if (course == null)
         {
             throw new ArgumentNullException(nameof(course));
