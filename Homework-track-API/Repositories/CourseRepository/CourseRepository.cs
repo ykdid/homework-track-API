@@ -26,6 +26,13 @@ public class CourseRepository:ICourseRepository
         var course = await _context.Courses.FindAsync(id);
         return course;
     }
+
+    public async Task<List<Course>> GetCoursesByTeacherId(int id)
+    {
+        return await _context.Courses
+            .Where(c => c.TeacherId == id)
+            .ToListAsync();
+    }
     
     public async Task<Course> CreateCourseAsync(Course course)
     {
