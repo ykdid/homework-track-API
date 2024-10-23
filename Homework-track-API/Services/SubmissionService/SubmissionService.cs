@@ -2,6 +2,7 @@ using Homework_track_API.Entities;
 using Homework_track_API.Repositories.HomeworkRepository;
 using Homework_track_API.Repositories.StudentRepository;
 using Homework_track_API.Repositories.SubmissionRepository;
+using ArgumentException = System.ArgumentException;
 
 
 namespace Homework_track_API.Services.SubmissionService;
@@ -122,5 +123,29 @@ public class SubmissionService(ISubmissionRepository submissionRepository , IStu
         }
 
         return await _submissionRepository.GetSubmissionsByHomeworkIdAsync(id);
+    }
+
+    public async Task<Submission> UpdateMarkBySubmissionId(int submissionId, int mark)
+    {
+        if (submissionId <= 0)
+        {
+            throw new ArgumentException("Invalid submission ID.");
+        }
+
+        var submission = await _submissionRepository.GetSubmissionByIdAsync(submissionId);
+
+        if (submission == null)
+        {
+            throw new KeyNotFoundException($"Submission with ID {submission.Id} not found.");
+        }
+
+        if (mark < 0 || mark>100)
+        {
+            throw new ArgumentException("Mark value should be between 0 and 100");
+        }
+
+        submission.Mark = mark;
+
+        return await _submissionRepository.UpdateSubmissionAsync(submission);
     }
 }
