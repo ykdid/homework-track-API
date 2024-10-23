@@ -7,6 +7,7 @@ public class TeacherService(ITeacherRepository teacherRepository):ITeacherServic
 {
     private readonly ITeacherRepository _teacherRepository = teacherRepository;
     
+    
     public async Task<IEnumerable<Teacher>> GetAllTeachers()
     {
         return await _teacherRepository.GetAllTeachersAsync();
