@@ -31,7 +31,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
-        [HttpGet("GetHomeworkBy/{id}")]
+        [HttpGet("getHomeworkBy/{id}")]
         public async Task<IActionResult> GetHomeworkById(int id)
         {
             try
@@ -55,7 +55,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
-        [HttpPost("CreateHomeworkByCourse/{id}")]
+        [HttpPost("createHomeworkByCourse/{id}")]
         public async Task<IActionResult> CreateHomeworkByCourseId(int courseId, Homework homework)
         {
             try
@@ -69,7 +69,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
-        [HttpPatch("UpdateHomeworkBy/{id}")]
+        [HttpPatch("updateHomeworkBy/{id}")]
         public async Task<IActionResult> UpdateHomeworkById(int id, [FromBody] Homework homework)
         {
             if (id != homework.Id)
@@ -92,7 +92,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
-        [HttpPatch("SoftDeleteHomeworkBy/{id}")]
+        [HttpPatch("softDeleteHomeworkBy/{id}")]
         public async Task<IActionResult> SoftDeleteHomeworkById(int id)
         {
             try
@@ -110,7 +110,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
-        [HttpGet("GetHomeworksByCourse/{id}")]
+        [HttpGet("getHomeworksByCourse/{id}")]
         public async Task<IActionResult> GetHomeworksByCourseId(int id)
         {
             try
@@ -128,7 +128,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
-        [HttpGet("GetExpiredHomeworksByCourse/{id}")]
+        [HttpGet("getExpiredHomeworksByCourse/{id}")]
         public async Task<IActionResult> GetExpiredHomeworksByCourseId(int id)
         {
             try

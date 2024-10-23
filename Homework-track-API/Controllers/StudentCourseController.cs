@@ -10,7 +10,7 @@ namespace Homework_track_API.Controllers
     {
         private IStudentCourseService _studentCourseService = studentCourseService;
 
-        [HttpPost("AddStudentToCourseBy/{studentId}/{courseId}")]
+        [HttpPost("addStudentToCourseBy/{studentId}/{courseId}")]
         public async Task<IActionResult> AddStudentToCourse(int studentId, int courseId)
         {
             if (studentId <= 0 || courseId <= 0)
@@ -33,7 +33,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
-        [HttpDelete("RemoveStudentFromCourseBy/{studentId}/{courseId}")]
+        [HttpDelete("removeStudentFromCourseBy/{studentId}/{courseId}")]
         public async Task<IActionResult> RemoveStudentFromCourse(int studentId, int courseId)
         {
             if (studentId <= 0 || courseId <= 0)
@@ -56,7 +56,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
-        [HttpGet("GetStudentsByCourse/{courseId}")]
+        [HttpGet("getStudentsByCourse/{courseId}")]
         public async Task<IActionResult> GetStudentsByCourseId(int courseId)
         {
             if (courseId <= 0)
@@ -79,7 +79,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
-        [HttpGet("GetCoursesByStudent/{studentId}")]
+        [HttpGet("getCoursesByStudent/{studentId}")]
         public async Task<IActionResult> GetCoursesByStudentId(int studentId)
         {
             if (studentId <= 0)
