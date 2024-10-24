@@ -65,14 +65,14 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
             throw new ArgumentException("Homework description cannot be empty and should be long enough.");
         }
 
-        if (homework.ExpireDate < DateTime.Now)
+        if (homework.ExpireDate < DateTime.UtcNow)
         {
             throw new InvalidOperationException("Homework due date cannot be in the past.");
         }
 
         homework.Status = HomeworkStatus.Active;
         homework.CourseId = courseId;
-        homework.InitialDate = DateTime.Now;
+        homework.InitialDate = DateTime.UtcNow;
         
         return await _homeworkRepository.CreateHomeworkAsync(homework);
     }       
