@@ -132,6 +132,9 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
             existingHomework.ExpireDate = homework.ExpireDate;
         }
 
+        existingHomework.Description = !string.IsNullOrEmpty(homework.Description)
+            ? homework.Description
+            : existingHomework.Description;
         existingHomework.ImagePath = !string.IsNullOrEmpty(homework.ImagePath) ? homework.ImagePath : existingHomework.ImagePath;
         existingHomework.DocumentationPath = !string.IsNullOrEmpty(homework.DocumentationPath) ? homework.DocumentationPath : existingHomework.DocumentationPath;
         
