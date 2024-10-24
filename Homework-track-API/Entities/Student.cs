@@ -16,6 +16,6 @@ public class Student
     [Required]
     public string Password { get; set; }
     public string? ProfileImagePath { get; set; }
-    public ICollection<StudentCourse> StudentCourses { get; set; }  = new List<StudentCourse>();
+    public ICollection<StudentCourse>? StudentCourses { get; set; }
         
 }

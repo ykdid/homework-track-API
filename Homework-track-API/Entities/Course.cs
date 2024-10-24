@@ -17,6 +17,6 @@ public class Course
     public string Code { get; set; }
 
     public CourseStatus Status { get; set; } = CourseStatus.Active;
-    public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
-    public ICollection<Homework> Homeworks { get; set; } = new List<Homework>();
+    public ICollection<StudentCourse>? StudentCourses { get; set; } 
+    public ICollection<Homework>? Homeworks { get; set; } 
 }

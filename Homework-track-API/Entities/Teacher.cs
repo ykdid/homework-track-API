@@ -16,6 +16,6 @@ public class Teacher
     [Required]
     public string Password { get; set; }
     public string? ProfileImagePath { get; set; }
-    public ICollection<Course> Courses { get; set; } = new List<Course>();
+    public ICollection<Course>? Courses { get; set; }
 
 }
