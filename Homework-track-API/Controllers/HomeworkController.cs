@@ -55,7 +55,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
-        [HttpPost("createHomeworkByCourse/{id}")]
+        [HttpPost("createHomeworkByCourse/{courseId}")]
         public async Task<IActionResult> CreateHomeworkByCourseId(int courseId, Homework homework)
         {
             try
