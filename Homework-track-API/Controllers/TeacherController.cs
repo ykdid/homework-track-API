@@ -102,7 +102,7 @@ namespace Homework_track_API.Controllers{
             try
             {
 
-                var updatedTeacher = await _teacherService.UpdateTeacher(teacher);
+                var updatedTeacher = await _teacherService.UpdateTeacher(id ,teacher);
                 return Ok(updatedTeacher);
 
             }

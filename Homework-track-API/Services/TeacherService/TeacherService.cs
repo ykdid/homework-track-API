@@ -73,18 +73,23 @@ public class TeacherService(ITeacherRepository teacherRepository):ITeacherServic
         return teacher;
     }
 
-    public async Task<Teacher> UpdateTeacher(Teacher teacher)
+    public async Task<Teacher> UpdateTeacher(int id,Teacher teacher)
     {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid teacher ID");
+        }
+        
         if (teacher == null)
         {
             throw new ArgumentNullException(nameof(teacher), "Updated student object cannot be null.");
         }
 
-        var existingTeacher = await _teacherRepository.GetTeacherByIdAsync(teacher.Id);
+        var existingTeacher = await _teacherRepository.GetTeacherByIdAsync(id);
 
         if (existingTeacher == null)
         {
-            throw new KeyNotFoundException($"Teacher with ID {teacher.Id} not found.");
+            throw new KeyNotFoundException($"Teacher with ID {id} not found.");
         }
         
         if (!string.IsNullOrWhiteSpace(teacher.Name))
@@ -112,8 +117,8 @@ public class TeacherService(ITeacherRepository teacherRepository):ITeacherServic
             existingTeacher.ProfileImagePath = teacher.ProfileImagePath;
         }
 
-        await _teacherRepository.UpdateTeacherAsync(teacher);
-        return teacher;
+        await _teacherRepository.UpdateTeacherAsync(existingTeacher);
+        return existingTeacher;
     }
     
 }
