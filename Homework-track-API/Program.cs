@@ -1,11 +1,13 @@
 using Homework_track_API.Data;
 using Homework_track_API.Repositories.CourseRepository;
 using Homework_track_API.Repositories.HomeworkRepository;
+using Homework_track_API.Repositories.StudentCourseRepository;
 using Homework_track_API.Repositories.StudentRepository;
 using Homework_track_API.Repositories.SubmissionRepository;
 using Homework_track_API.Repositories.TeacherRepository;
 using Homework_track_API.Services.CourseService;
 using Homework_track_API.Services.HomeworkService;
+using Homework_track_API.Services.StudentCourseService;
 using Homework_track_API.Services.StudentService;
 using Homework_track_API.Services.SubmissionService;
 using Homework_track_API.Services.TeacherService;
@@ -28,12 +30,14 @@ builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<IStudentCourseRepository, StudentCourseRepository>();
 
 builder.Services.AddScoped<IHomeworkService, HomeworkService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IStudentCourseService, StudentCourseService>();
 
 builder.Services.AddCors(options =>
 {
@@ -43,6 +47,11 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
+});
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
 });
 
 var app = builder.Build();
