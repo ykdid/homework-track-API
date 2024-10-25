@@ -35,8 +35,20 @@ public class SubmissionService(ISubmissionRepository submissionRepository , IStu
         return submission;
     }
 
-    public async Task<Submission> CreateSubmission(Submission submission)
+    public async Task<Submission> CreateSubmissionByStudentId(int studentId,Submission submission)
     {
+        if (studentId <= 0)
+        {
+            throw new ArgumentException("Invalid student ID.");
+        }
+
+        var student = await _studentRepository.GetStudentByIdAsync(studentId);
+
+        if (student == null)
+        {
+            throw new ArgumentNullException(nameof(student));
+        }
+        
         if (submission == null)
         {
             throw new ArgumentNullException(nameof(submission));
@@ -46,6 +58,8 @@ public class SubmissionService(ISubmissionRepository submissionRepository , IStu
         {
             throw new ArgumentException("Submission cannot be empty.");
         }
+
+        submission.StudentId = studentId;
 
         return await _submissionRepository.CreateSubmissionAsync(submission);
     }

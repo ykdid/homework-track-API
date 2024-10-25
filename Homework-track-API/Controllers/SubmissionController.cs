@@ -104,12 +104,12 @@ namespace Homework_track_API.Controllers{
             }
         }
 
-        [HttpPost("createSubmission")]
-        public async Task<IActionResult> CreateSubmission(Submission submission)
+        [HttpPost("createSubmissionByStudent/{studentId}")]
+        public async Task<IActionResult> CreateSubmissionByStudentId(int studentId ,Submission submission)
         {
             try
             {
-                var createdSubmission = await _submissionService.CreateSubmission(submission);
+                var createdSubmission = await _submissionService.CreateSubmissionByStudentId(studentId,submission);
                 return CreatedAtAction(nameof(GetSubmissionById), new { id = createdSubmission.Id }, createdSubmission);
             }
             catch (ArgumentException e)
