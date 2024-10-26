@@ -50,4 +50,9 @@ public class TeacherRepository:ITeacherRepository
         await _context.SaveChangesAsync();
         return teacher;
     }
+
+    public async Task<Teacher?> GetTeacherByEmailAsync(string email)
+    {
+        return await _context.Teachers.FirstOrDefaultAsync(t => t.Email == email);
+    }
 }

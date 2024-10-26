@@ -52,5 +52,10 @@ public class StudentRepository:IStudentRepository
         return student;
     }
 
+    public async Task<Student?> GetStudentByEmailAsync(string email)
+    {
+        return await _context.Students.FirstOrDefaultAsync(s => s.Email == email);
+    }
+
 
 }
