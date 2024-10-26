@@ -9,4 +9,5 @@ public interface ITeacherService
     Task<bool> DeleteTeacherById(int id);
     Task<Teacher> GetTeacherById(int id);
     Task<Teacher> UpdateTeacher(int id,Teacher teacher);
+    Task<bool> ChangePasswordById(int id, string currentPassword, string newPassword);
 }

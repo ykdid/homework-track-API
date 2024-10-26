@@ -1,12 +1,13 @@
 using Homework_track_API.Entities;
 using Homework_track_API.Repositories.TeacherRepository;
+using Homework_track_API.Services.EncryptionService;
 
 namespace Homework_track_API.Services.TeacherService;
 
-public class TeacherService(ITeacherRepository teacherRepository):ITeacherService
+public class TeacherService(ITeacherRepository teacherRepository , IEncryptionService encryptionService):ITeacherService
 {
     private readonly ITeacherRepository _teacherRepository = teacherRepository;
-    
+    private readonly IEncryptionService _encryptionService = encryptionService;
     
     public async Task<IEnumerable<Teacher>> GetAllTeachers()
     {
@@ -27,6 +28,7 @@ public class TeacherService(ITeacherRepository teacherRepository):ITeacherServic
             throw new KeyNotFoundException($"Teacher with ID {id} not found.");
         }
 
+        teacher.Email = _encryptionService.Decrypt(teacher.Email);
         return teacher;
     }
 
@@ -104,12 +106,12 @@ public class TeacherService(ITeacherRepository teacherRepository):ITeacherServic
         
         if (!string.IsNullOrWhiteSpace(teacher.Email))
         {
-            existingTeacher.Email = teacher.Email.Trim();
+            existingTeacher.Email = _encryptionService.Encrypt(teacher.Email.Trim());
         }
         
         if (!string.IsNullOrWhiteSpace(teacher.Password))
         {
-            existingTeacher.Password = teacher.Password; 
+            existingTeacher.Password = _encryptionService.Hash(teacher.Password); 
         }
         
         if (!string.IsNullOrWhiteSpace(teacher.ProfileImagePath))
@@ -119,6 +121,20 @@ public class TeacherService(ITeacherRepository teacherRepository):ITeacherServic
 
         await _teacherRepository.UpdateTeacherAsync(existingTeacher);
         return existingTeacher;
+    }
+    
+    public async Task<bool> ChangePasswordById(int id, string currentPassword, string newPassword)
+    {
+        var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+
+        if (teacher ==  null || !_encryptionService.VerifyHash(currentPassword,teacher.Password))
+        {
+            return false;
+        }
+
+        teacher.Password = _encryptionService.Hash(newPassword);
+        await _teacherRepository.UpdateTeacherAsync(teacher);
+        return true;
     }
     
 }

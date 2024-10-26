@@ -1,11 +1,13 @@
 using Homework_track_API.Repositories.StudentRepository;
 using Homework_track_API.Entities;
+using Homework_track_API.Services.EncryptionService;
 
 namespace Homework_track_API.Services.StudentService;
 
-public class StudentService(IStudentRepository studentRepository):IStudentService
+public class StudentService(IStudentRepository studentRepository , IEncryptionService encryptionService):IStudentService
 {
     private readonly IStudentRepository _studentRepository = studentRepository;
+    private readonly IEncryptionService _encryptionService = encryptionService;
     
     public async Task<IEnumerable<Student>> GetAllStudents()
     {
@@ -26,6 +28,7 @@ public class StudentService(IStudentRepository studentRepository):IStudentServic
             throw new KeyNotFoundException($"Student with ID {id} not found.");
         }
 
+        student.Email = _encryptionService.Decrypt(student.Email);
         return student;
     }
 
@@ -98,12 +101,7 @@ public class StudentService(IStudentRepository studentRepository):IStudentServic
         
         if (!string.IsNullOrWhiteSpace(student.Email))
         {
-            existingStudent.Email = student.Email.Trim();
-        }
-        
-        if (!string.IsNullOrWhiteSpace(student.Password))
-        {
-            existingStudent.Password = student.Password; 
+            existingStudent.Email = _encryptionService.Encrypt(student.Email.Trim());
         }
         
         if (!string.IsNullOrWhiteSpace(student.ProfileImagePath))
@@ -114,6 +112,20 @@ public class StudentService(IStudentRepository studentRepository):IStudentServic
         await _studentRepository.UpdateStudentAsync(existingStudent);
 
         return existingStudent;
+    }
+
+    public async Task<bool> ChangePasswordById(int id, string currentPassword, string newPassword)
+    {
+        var student = await _studentRepository.GetStudentByIdAsync(id);
+
+        if (student ==  null || !_encryptionService.VerifyHash(currentPassword,student.Password))
+        {
+            return false;
+        }
+
+        student.Password = _encryptionService.Hash(newPassword);
+        await _studentRepository.UpdateStudentAsync(student);
+        return true;
     }
     
     
