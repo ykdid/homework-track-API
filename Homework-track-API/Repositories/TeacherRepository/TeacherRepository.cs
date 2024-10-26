@@ -48,7 +48,7 @@ public class TeacherRepository:ITeacherRepository
     {
         _context.Teachers.Update(teacher);
         await _context.SaveChangesAsync();
-        return teacher;
+        return teacher; 
     }
 
     public async Task<Teacher?> GetTeacherByEmailAsync(string email)

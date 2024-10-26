@@ -10,5 +10,5 @@ public interface ITeacherRepository
     Task<bool> DeleteTeacherAsync(int id);
     Task<Teacher> GetTeacherByIdAsync(int id);
     Task<Teacher> UpdateTeacherAsync(Teacher teacher);
-    Task<Teacher?> GetTeacherByEmailAsync(string email);
+    Task<Teacher?> GetTeacherByEmailAsync(string email); 
 }   
