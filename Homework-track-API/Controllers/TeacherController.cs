@@ -1,3 +1,4 @@
+using Homework_track_API.DTOs;
 using Homework_track_API.Services.TeacherService;
 using Microsoft.AspNetCore.Mvc;
 using Homework_track_API.Entities;
@@ -113,6 +114,33 @@ namespace Homework_track_API.Controllers{
             catch (Exception e)
             {
                 return StatusCode(500, $"Internal server error: {e.Message}");
+            }
+        }
+        
+        [HttpPatch("changeTeacherPasswordBy/{id}")]
+        public async Task<IActionResult> ChangePasswordById(int id, [FromBody] ChangePassword changePassword)
+        {
+            try
+            {
+                var result = await _teacherService.ChangePasswordById(id , changePassword.currentPassword, changePassword.newPassword);
+
+                if (result)
+                {
+                    return Ok("Password changed successfully");
+                }
+                else
+                {
+                    return BadRequest("Failed to change password.");
+                }
+                
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
         }
     }
