@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Homework_track_API.Enums;
 
 namespace Homework_track_API.Entities;
 
@@ -16,6 +17,7 @@ public class Teacher
     [Required]
     public string Password { get; set; }
     public string? ProfileImagePath { get; set; }
+    public UserRole Role { get; set; } = UserRole.Teacher;
     public ICollection<Course>? Courses { get; set; }
 
 }
