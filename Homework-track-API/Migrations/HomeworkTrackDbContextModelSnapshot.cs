@@ -121,6 +121,9 @@ namespace Homework_track_API.Migrations
                     b.Property<string>("ProfileImagePath")
                         .HasColumnType("text");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("text");
@@ -192,6 +195,9 @@ namespace Homework_track_API.Migrations
 
                     b.Property<string>("ProfileImagePath")
                         .HasColumnType("text");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Surname")
                         .IsRequired()
