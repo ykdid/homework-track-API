@@ -40,7 +40,7 @@ public class AuthService(IEncryptionService encryptionService,IConfiguration con
 
             await _studentRepository.CreateStudentAsync(student);
 
-            return new AuthResponse { IsSuccess = true, Id = student.Id };
+            return new AuthResponse { IsSuccess = true, Id = student.Id , Role = UserRole.Student.ToString()};
         }
         else if (request.Role == UserRole.Teacher)
         {
@@ -59,8 +59,10 @@ public class AuthService(IEncryptionService encryptionService,IConfiguration con
                 Password = _encryptionService.Hash(request.Password),
                 ProfileImagePath = null
             };
+
+            await _teacherRepository.CreateTeacherAsync(teacher);
             
-            return new AuthResponse { IsSuccess = true, Id = teacher.Id };
+            return new AuthResponse { IsSuccess = true, Id = teacher.Id, Role = UserRole.Teacher.ToString()};
         }
         
         return new AuthResponse { IsSuccess = false, ErrorMessage = "Invalid role." };
