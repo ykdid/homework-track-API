@@ -39,8 +39,9 @@ public class AuthService(IEncryptionService encryptionService,IConfiguration con
             };
 
             await _studentRepository.CreateStudentAsync(student);
-
-            return new AuthResponse { IsSuccess = true, Id = student.Id , Role = UserRole.Student.ToString()};
+            
+            var token = GenerateJwtToken(student.Id, UserRole.Student);
+            return new AuthResponse { IsSuccess = true,  Token = token,Id = student.Id, Role = UserRole.Student.ToString()};
         }
         else if (request.Role == UserRole.Teacher)
         {
@@ -62,7 +63,8 @@ public class AuthService(IEncryptionService encryptionService,IConfiguration con
 
             await _teacherRepository.CreateTeacherAsync(teacher);
             
-            return new AuthResponse { IsSuccess = true, Id = teacher.Id, Role = UserRole.Teacher.ToString()};
+            var token = GenerateJwtToken(teacher.Id, UserRole.Teacher);
+            return new AuthResponse { IsSuccess = true,  Token = token,Id = teacher.Id, Role = UserRole.Teacher.ToString()};
         }
         
         return new AuthResponse { IsSuccess = false, ErrorMessage = "Invalid role." };
@@ -118,7 +120,7 @@ public class AuthService(IEncryptionService encryptionService,IConfiguration con
             issuer: jwtSettings["Issuer"],
             audience: jwtSettings["Audience"],
             claims: claims,
-            expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["ExpiryInMinutes"])),
+            expires: DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["ExpiryInMinutes"])),
             signingCredentials: creds
         );
 
