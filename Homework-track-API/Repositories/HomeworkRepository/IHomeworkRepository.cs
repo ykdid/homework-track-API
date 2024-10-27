@@ -11,4 +11,5 @@ public interface IHomeworkRepository
     Task<List<Homework>> GetExpiredHomeworksByCourseIdAsync(int id);
     Task<Homework> UpdateHomeworkAsync(Homework homework);
    Task<List<Homework>> GetHomeworksByCourseIdAsync(int id);
+   Task<IEnumerable<Homework>> GetExpiredHomeworks();
 }

@@ -68,6 +68,12 @@ public class HomeworkRepository:IHomeworkRepository
             .Where(hw => hw.CourseId == id && hw.Status == HomeworkStatus.Active)
             .ToListAsync();
     }
-    
+
+    public async Task<IEnumerable<Homework>> GetExpiredHomeworks()
+    {
+        return await _context.Homeworks
+            .Where(hw => hw.ExpireDate < DateTime.UtcNow && hw.Status != HomeworkStatus.Expired)
+            .ToListAsync();
+    }
     
 }
