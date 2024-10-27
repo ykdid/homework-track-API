@@ -75,18 +75,23 @@ public class StudentService(IStudentRepository studentRepository , IEncryptionSe
         return student;
     }
 
-    public async Task<Student> UpdateStudent(Student student)
+    public async Task<Student> UpdateStudent(int id,Student student)
     {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid student ID.");
+        }
+        
         if (student == null)
         {
             throw new ArgumentNullException(nameof(student), "Updated student object cannot be null.");
         }
         
-        var existingStudent = await _studentRepository.GetStudentByIdAsync(student.Id);
+        var existingStudent = await _studentRepository.GetStudentByIdAsync(id);
 
         if (existingStudent == null)
         {
-            throw new KeyNotFoundException($"Student with ID {student.Id} not found.");
+            throw new KeyNotFoundException($"Student with ID {id} not found.");
         }
         
         if (!string.IsNullOrWhiteSpace(student.Name))

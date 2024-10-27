@@ -8,7 +8,7 @@ public interface ISubmissionService
     Task<Submission> GetSubmissionById(int id);
     Task<Submission> CreateSubmissionByStudentId(int studentId,Submission submission);
     Task<bool> DeleteSubmissionById(int id);
-    Task<Submission> UpdateSubmission(Submission submission);
+    Task<Submission> UpdateSubmission(int id,Submission submission);
     Task<List<Submission>> GetSubmissionsByStudentId(int id);
     Task<List<Submission>> GetSubmissionsByHomeworkId(int id);
     Task<Submission> UpdateMarkBySubmissionId(int submissionId ,int mark);

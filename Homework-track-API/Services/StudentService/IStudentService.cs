@@ -8,6 +8,6 @@ public interface IStudentService
     Task<Student> GetStudentById(int id);
     Task<bool> DeleteStudentById(int id);
     Task<Student> CreateStudent(Student student);
-    Task<Student> UpdateStudent(Student student);
+    Task<Student> UpdateStudent(int id,Student student);
     Task<bool> ChangePasswordById(int id, string currentPassword, string newPassword);
 }

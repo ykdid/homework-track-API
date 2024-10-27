@@ -99,7 +99,7 @@ namespace Homework_track_API.Controllers
 
             try
             {
-                var updatedStudent = await _studentService.UpdateStudent(student);
+                var updatedStudent = await _studentService.UpdateStudent(id,student);
                 return Ok(updatedStudent);
             }
             catch (KeyNotFoundException e)

@@ -82,18 +82,23 @@ public class SubmissionService(ISubmissionRepository submissionRepository , IStu
         return true;
     }
 
-    public async Task<Submission> UpdateSubmission(Submission submission)
+    public async Task<Submission> UpdateSubmission(int id,Submission submission)
     {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid submission ID.");
+        }
+        
         if (submission == null)
         {
             throw new ArgumentNullException(nameof(submission));
         }
 
-        var existingSubmission = await _submissionRepository.GetSubmissionByIdAsync(submission.Id);
+        var existingSubmission = await _submissionRepository.GetSubmissionByIdAsync(id);
 
-        if (submission == null)
+        if (existingSubmission == null)
         {
-            throw new KeyNotFoundException($"Homework with ID {submission.Id} not found.");
+            throw new KeyNotFoundException($"Homework with ID {id} not found.");
         }
 
         if (!string.IsNullOrWhiteSpace(submission.SubmissionFilePath))
@@ -101,8 +106,8 @@ public class SubmissionService(ISubmissionRepository submissionRepository , IStu
             existingSubmission.SubmissionFilePath = submission.SubmissionFilePath;
         }
 
-        await _submissionRepository.UpdateSubmissionAsync(submission);
-        return submission;
+        await _submissionRepository.UpdateSubmissionAsync(existingSubmission);
+        return existingSubmission;
     }
 
     public async Task<List<Submission>> GetSubmissionsByStudentId(int id)

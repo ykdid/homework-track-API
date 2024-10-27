@@ -148,7 +148,7 @@ namespace Homework_track_API.Controllers{
             
             try
             {
-                var updatedSubmission = await _submissionService.UpdateSubmission(submission);
+                var updatedSubmission = await _submissionService.UpdateSubmission(id,submission);
                 return Ok(submission);
             }
             catch (KeyNotFoundException e)
