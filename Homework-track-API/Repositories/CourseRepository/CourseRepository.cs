@@ -18,6 +18,7 @@ public class CourseRepository:ICourseRepository
     {
         return await _context.Courses
             .Where(c => c.Status == CourseStatus.Active)
+            .Include(c => c.Homeworks)
             .ToListAsync();
     }
     
