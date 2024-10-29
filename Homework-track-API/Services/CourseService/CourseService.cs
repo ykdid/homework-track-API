@@ -1,15 +1,17 @@
 using Homework_track_API.Entities;
 using Homework_track_API.Enums;
 using Homework_track_API.Repositories.CourseRepository;
+using Homework_track_API.Repositories.StudentRepository;
 using Homework_track_API.Repositories.TeacherRepository;
 using ArgumentException = System.ArgumentException;
 
 namespace Homework_track_API.Services.CourseService;
 
-public class CourseService(ICourseRepository courseRepository , ITeacherRepository teacherRepository):ICourseService
+public class CourseService(ICourseRepository courseRepository , ITeacherRepository teacherRepository , IStudentRepository studentRepository):ICourseService
 {
     private readonly ICourseRepository _courseRepository = courseRepository;
     private readonly ITeacherRepository _teacherRepository = teacherRepository;
+    private readonly IStudentRepository _studentRepository = studentRepository;
 
     public async Task<List<Course>> GetAllCourses()
     {
@@ -199,5 +201,49 @@ public class CourseService(ICourseRepository courseRepository , ITeacherReposito
         }
 
         return await _courseRepository.ArchiveCourseByIdAsync(id);
+    }
+
+    public async Task<IEnumerable<Course?>> FindCoursesByTeacherId(int teacherId, string courseName)
+    {
+        if (teacherId <= 0)
+        {
+            throw new ArgumentException("Invalid teacher ID.");
+        }
+
+        var teacher = await _teacherRepository.GetTeacherByIdAsync(teacherId);
+
+        if (teacher == null)
+        {
+            throw new ArgumentNullException(nameof(teacher));
+        }
+
+        if (courseName.Length == 0)
+        {
+            throw new ArgumentException("Need a input characters.");
+        }
+
+        return await _courseRepository.FindCoursesByTeacherIdAsync(teacherId, courseName);
+    }
+    
+    public async Task<IEnumerable<Course?>> FindCoursesByStudentId(int studentId, string courseName)
+    {
+        if (studentId <= 0)
+        {
+            throw new ArgumentException("Invalid teacher ID.");
+        }
+
+        var student = await _studentRepository.GetStudentByIdAsync(studentId);
+
+        if (student == null)
+        {
+            throw new ArgumentNullException(nameof(student));
+        }
+
+        if (courseName.Length == 0)
+        {
+            throw new ArgumentException("Need a input characters.");
+        }
+
+        return await _courseRepository.FindCoursesByStudentIdAsync(studentId, courseName);
     }
 }

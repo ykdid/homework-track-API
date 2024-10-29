@@ -12,4 +12,6 @@ public interface ICourseService
     Task<Course> UpdateCourseById(int id, Course course);
     Task<bool> SoftDeleteCourseById(int id);
     Task<bool> ArchiveCourseById(int id);
+    Task<IEnumerable<Course?>> FindCoursesByTeacherId(int teacherId, string courseName);
+    Task<IEnumerable<Course?>> FindCoursesByStudentId(int studentId, string courseName);
 }
