@@ -29,10 +29,15 @@ public class AuthService(IEncryptionService encryptionService,IConfiguration con
                 return new AuthResponse { IsSuccess = false, ErrorMessage = "User already exists." };
             }
 
+            if (request.Name.Length < 3 && request.Surname.Length < 2)
+            {
+                return new AuthResponse { IsSuccess = false, ErrorMessage = "Name and Surname should be long enough." };
+            }
+            
             var student = new Student
             {
-                Name = request.Name,
-                Surname = request.Surname,
+                Name = request.Name.Trim(),
+                Surname = request.Surname.Trim(),
                 Email = _encryptionService.Encrypt(request.Email),
                 Password = _encryptionService.Hash(request.Password),
                 ProfileImagePath = null
@@ -51,11 +56,16 @@ public class AuthService(IEncryptionService encryptionService,IConfiguration con
             {
                 return new AuthResponse { IsSuccess = false, ErrorMessage = "User already exists." };
             }
+            
+            if (request.Name.Length < 3 && request.Surname.Length < 2)
+            {
+                return new AuthResponse { IsSuccess = false, ErrorMessage = "Name and Surname should be long enough." };
+            }
 
             var teacher = new Teacher
             {
-                Name = request.Name,
-                Surname = request.Surname,
+                Name = request.Name.Trim(),
+                Surname = request.Surname.Trim(),
                 Email = _encryptionService.Encrypt(request.Email),
                 Password = _encryptionService.Hash(request.Password),
                 ProfileImagePath = null
