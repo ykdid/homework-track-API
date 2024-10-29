@@ -15,7 +15,6 @@ public class Course
     public string? ImagePath { get; set; }
     [Required]
     public string Code { get; set; }
-
     public CourseStatus Status { get; set; } = CourseStatus.Active;
     public ICollection<StudentCourse>? StudentCourses { get; set; } 
     public ICollection<Homework>? Homeworks { get; set; } 
