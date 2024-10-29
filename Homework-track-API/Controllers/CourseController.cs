@@ -181,6 +181,64 @@ namespace Homework_track_API.Controllers
                 return StatusCode(500, $"Internal server error: {e.Message}");
             }
         }
+
+        [Authorize(Policy = "TeacherOnly")]
+        [HttpGet("findCoursesByTeacher/{teacherId}")]
+        public async Task<IActionResult> FindCoursesByTeacherId(int teacherId, string courseName)
+        {
+            if (teacherId <= 0)
+            {
+                return BadRequest("Invalid teacher ID.");
+            }
+
+            if (courseName.Length == 0)
+            {
+                return BadRequest("Need input character.");
+            }
+
+            try
+            {
+                var courses = await _courseService.FindCoursesByTeacherId(teacherId, courseName);
+                if (courses == null || !courses.Any())
+                {
+                    return NotFound("Not Found");
+                }
+                return Ok(courses);
+            }   
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Internal server error: {e.Message}");
+            }
+        }
+        
+        [Authorize(Policy = "StudentOnly")]
+        [HttpGet("findCoursesByStudent/{studentId}")]
+        public async Task<IActionResult> FindCoursesByStudentId(int studentId, string courseName)
+        {
+            if (studentId <= 0)
+            {
+                return BadRequest("Invalid student ID.");
+            }
+
+            if (courseName.Length == 0)
+            {
+                return BadRequest("Need input character.");
+            }
+
+            try
+            {
+                var courses = await _courseService.FindCoursesByStudentId(studentId, courseName);
+                if (courses == null || !courses.Any())
+                {
+                    return NotFound("Not Found");
+                }
+                return Ok(courses);
+            }   
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Internal server error: {e.Message}");
+            }
+        }
     }
 }
 
