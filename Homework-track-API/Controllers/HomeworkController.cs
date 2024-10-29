@@ -1,5 +1,6 @@
 using Homework_track_API.Entities;
 using Homework_track_API.Services.HomeworkService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -31,6 +32,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "StudentOrTeacher")]
         [HttpGet("getHomeworkBy/{id}")]
         public async Task<IActionResult> GetHomeworkById(int id)
         {
@@ -54,7 +56,8 @@ namespace Homework_track_API.Controllers
                 return BadRequest(e.Message); 
             }
         }
-
+        
+        [Authorize(Policy = "Teacher")]
         [HttpPost("createHomeworkByCourse/{courseId}")]
         public async Task<IActionResult> CreateHomeworkByCourseId(int courseId, Homework homework)
         {
@@ -69,6 +72,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "Teacher")]
         [HttpPatch("updateHomeworkBy/{id}")]
         public async Task<IActionResult> UpdateHomeworkById(int id, [FromBody] Homework homework)
         {
@@ -92,6 +96,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "Teacher")]
         [HttpPatch("softDeleteHomeworkBy/{id}")]
         public async Task<IActionResult> SoftDeleteHomeworkById(int id)
         {
@@ -110,6 +115,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "StudentOrTeacher")]
         [HttpGet("getHomeworksByCourse/{id}")]
         public async Task<IActionResult> GetHomeworksByCourseId(int id)
         {
@@ -128,6 +134,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "Teacher")]
         [HttpGet("getExpiredHomeworksByCourse/{id}")]
         public async Task<IActionResult> GetExpiredHomeworksByCourseId(int id)
         {

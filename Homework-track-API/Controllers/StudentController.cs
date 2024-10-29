@@ -1,6 +1,7 @@
 using Homework_track_API.DTOs;
 using Homework_track_API.Entities;
 using Homework_track_API.Services.StudentService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Homework_track_API.Controllers
@@ -31,6 +32,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "StudentOrTeacher")]
         [HttpGet("getStudentBy/{id}")]
         public async Task<IActionResult> GetStudentById(int id)
         {
@@ -55,6 +57,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "Student")]
         [HttpDelete("deleteStudentBy/{id}")]
         public async Task<IActionResult> DeleteStudentById(int id)
         {
@@ -75,6 +78,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "Student")]
         [HttpPost("createStudent")]
         public async Task<IActionResult> CreateStudent(Student student)
         {
@@ -89,6 +93,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "Student")]
         [HttpPatch("updateStudentBy/{id}")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] Student student)
         {
@@ -112,6 +117,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "Student")]
         [HttpPatch("changeStudentPasswordBy/{id}")]
         public async Task<IActionResult> ChangePasswordById(int id, [FromBody] ChangePassword changePassword)
         {

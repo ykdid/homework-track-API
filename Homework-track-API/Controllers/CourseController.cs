@@ -1,5 +1,6 @@
 using Homework_track_API.Entities;
 using Homework_track_API.Services.CourseService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Homework_track_API.Controllers
@@ -10,7 +11,7 @@ namespace Homework_track_API.Controllers
     public class CourseController(ICourseService courseService): ControllerBase
     {
         private readonly ICourseService _courseService = courseService;
-
+        
         [HttpGet("getAllCourses")]
         public async Task<IActionResult> GetAllCourses()
         {
@@ -28,7 +29,8 @@ namespace Homework_track_API.Controllers
                 return StatusCode(500, $"Internal server error: {e.Message}");
             }
         }
-
+        
+        [Authorize(Policy = "StudentOrTeacher")]
         [HttpGet("getCourseBy/{id}")]
         public async Task<IActionResult> GetCourseById(int id)
         {
@@ -51,7 +53,8 @@ namespace Homework_track_API.Controllers
                 return StatusCode(500, $"Internal server error: {e.Message}");
             }
         }
-
+        
+        [Authorize(Policy = "TeacherOnly")]
         [HttpGet("getCoursesByTeacher/{id}")]
         public async Task<IActionResult> GetCoursesByTeacherId(int id)
         {
@@ -75,6 +78,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "TeacherOnly")]
         [HttpPost("createCourseByTeacher/{id}")]
         public async Task<IActionResult> CreateCourseByTeacherId(int id , [FromBody] Course course)
         {
@@ -94,6 +98,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "StudentOnly")]
         [HttpGet("getCourseByCode/{code}")]
         public async Task<IActionResult> GetCourseByCode(string code)
         {
@@ -117,6 +122,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "TeacherOnly")]
         [HttpPatch("updateCourseBy/{id}")]
         public async Task<IActionResult> UpdateCourseById(int id , Course course)
         {
@@ -136,6 +142,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "TeacherOnly")]
         [HttpPatch("softDeleteCourseBy/{id}")]
         public async Task<IActionResult> SoftDeleteCourseById(int id)
         {
@@ -155,6 +162,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "TeacherOnly")]
         [HttpPatch("archiveCourseBy/{id}")]
         public async Task<IActionResult> ArchiveCourseById(int id)
         {

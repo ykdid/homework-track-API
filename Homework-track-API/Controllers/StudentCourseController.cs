@@ -1,4 +1,5 @@
 using Homework_track_API.Services.StudentCourseService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Homework_track_API.Controllers
@@ -9,7 +10,8 @@ namespace Homework_track_API.Controllers
     public class StudentCourseController(IStudentCourseService studentCourseService) : ControllerBase
     {
         private IStudentCourseService _studentCourseService = studentCourseService;
-
+        
+        [Authorize(Policy = "Student")]
         [HttpPost("addStudentToCourseBy/{studentId}/{courseId}")]
         public async Task<IActionResult> AddStudentToCourse(int studentId, int courseId)
         {
@@ -33,6 +35,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "StudentOrTeacher")]
         [HttpDelete("removeStudentFromCourseBy/{studentId}/{courseId}")]
         public async Task<IActionResult> RemoveStudentFromCourse(int studentId, int courseId)
         {
@@ -56,6 +59,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "StudentOrTeacher")]
         [HttpGet("getStudentsByCourse/{courseId}")]
         public async Task<IActionResult> GetStudentsByCourseId(int courseId)
         {
@@ -79,6 +83,7 @@ namespace Homework_track_API.Controllers
             }
         }
 
+        [Authorize(Policy = "Student")]
         [HttpGet("getCoursesByStudent/{studentId}")]
         public async Task<IActionResult> GetCoursesByStudentId(int studentId)
         {

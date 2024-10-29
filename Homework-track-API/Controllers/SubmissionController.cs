@@ -1,5 +1,6 @@
 using Homework_track_API.Entities;
 using Homework_track_API.Services.SubmissionService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Homework_track_API.Controllers{
@@ -30,6 +31,7 @@ namespace Homework_track_API.Controllers{
             }
         }
 
+        [Authorize(Policy = "StudentOrTeacher")]
         [HttpGet("getSubmissionBy/{id}")]
         public async Task<IActionResult> GetSubmissionById(int id)
         {
@@ -54,6 +56,7 @@ namespace Homework_track_API.Controllers{
             }
         }
 
+        [Authorize(Policy = "StudentOrTeacher")]
         [HttpGet("getSubmissionsByStudent/{id}")]
         public async Task<IActionResult> GetSubmissionsByStudentId(int id)
         {
@@ -79,6 +82,7 @@ namespace Homework_track_API.Controllers{
             }
         }
         
+        [Authorize(Policy = "Teacher")]
         [HttpGet("getSubmissionsByHomework/{id}")]
         public async Task<IActionResult> GetSubmissionsByHomeworkId(int id)
         {
@@ -104,6 +108,7 @@ namespace Homework_track_API.Controllers{
             }
         }
 
+        [Authorize(Policy = "Student")]
         [HttpPost("createSubmissionByStudent/{studentId}")]
         public async Task<IActionResult> CreateSubmissionByStudentId(int studentId ,Submission submission)
         {
@@ -118,6 +123,7 @@ namespace Homework_track_API.Controllers{
             }
         }
 
+        [Authorize(Policy = "Student")]
         [HttpDelete("deleteSubmissionBy/{id}")]
         public async Task<IActionResult> DeleteSubmissionById(int id)
         {
@@ -138,6 +144,7 @@ namespace Homework_track_API.Controllers{
             }
         }
 
+        [Authorize(Policy = "Student")]
         [HttpPatch("updateSubmissionBy/{id}")]
         public async Task<IActionResult> UpdateSubmissionById(int id, [FromBody] Submission submission)
         {
@@ -161,6 +168,7 @@ namespace Homework_track_API.Controllers{
             }
         }
 
+        [Authorize(Policy = "Teacher")]
         [HttpPatch("updateMarkBySubmission{submissionId}")]
         public async Task<IActionResult> UpdateMarkBySubmissionId(int submissionId, int mark)
         {
