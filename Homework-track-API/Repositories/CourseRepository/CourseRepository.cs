@@ -19,6 +19,7 @@ public class CourseRepository:ICourseRepository
         return await _context.Courses
             .Where(c => c.Status == CourseStatus.Active)
             .Include(c => c.Homeworks)
+            .Include(c=> c.StudentCourses)
             .ToListAsync();
     }
     
@@ -31,7 +32,7 @@ public class CourseRepository:ICourseRepository
     public async Task<List<Course>> GetCoursesByTeacherId(int id)
     {
         return await _context.Courses
-            .Where(c => c.TeacherId == id)   
+            .Where(c => c.TeacherId == id)
             .ToListAsync();
     }
     
@@ -82,6 +83,25 @@ public class CourseRepository:ICourseRepository
         return await _context.Courses
             .FirstOrDefaultAsync(c => c.Code == code && c.Status == CourseStatus.Active);
     }
+
+    public async Task<IEnumerable<Course?>> FindCoursesByTeacherIdAsync(int teacherId ,string courseName)
+    {
+        return await _context.Courses
+            .Where(c => c.Name.ToLower().Contains(courseName.Trim().ToLower())
+                        && c.Status == CourseStatus.Active 
+                        && c.TeacherId == teacherId)
+            .OrderBy(c => c.Id)
+            .ToListAsync();
+    }
     
-   
+    public async Task<IEnumerable<Course?>> FindCoursesByStudentIdAsync(int studentId, string courseName)
+    {
+        return await _context.Courses
+            .Where(c => c.Status == CourseStatus.Active
+                        && c.Name.ToLower().Contains(courseName.Trim().ToLower())
+                        && c.StudentCourses.Any(sc => sc.StudentId == studentId))
+            .OrderBy(c => c.Id)
+            .ToListAsync();
+    }
+
 }

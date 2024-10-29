@@ -12,5 +12,7 @@ public interface ICourseRepository
     Task<Course> UpdateCourseAsync(Course course);
     Task<bool> SoftDeleteCourseByIdAsync(int id);
     Task<bool> ArchiveCourseByIdAsync(int id);
-    
+    Task<IEnumerable<Course?>> FindCoursesByTeacherIdAsync(int teacherId, string courseName);
+    Task<IEnumerable<Course?>> FindCoursesByStudentIdAsync(int studentId, string courseName);
+
 }
