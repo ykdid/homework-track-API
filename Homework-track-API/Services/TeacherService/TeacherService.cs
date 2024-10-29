@@ -109,11 +109,6 @@ public class TeacherService(ITeacherRepository teacherRepository , IEncryptionSe
             existingTeacher.Email = _encryptionService.Encrypt(teacher.Email.Trim());
         }
         
-        if (!string.IsNullOrWhiteSpace(teacher.Password))
-        {
-            existingTeacher.Password = _encryptionService.Hash(teacher.Password); 
-        }
-        
         if (!string.IsNullOrWhiteSpace(teacher.ProfileImagePath))
         {
             existingTeacher.ProfileImagePath = teacher.ProfileImagePath;
@@ -132,7 +127,7 @@ public class TeacherService(ITeacherRepository teacherRepository , IEncryptionSe
             return false;
         }
 
-        teacher.Password = _encryptionService.Hash(newPassword);
+        teacher.Password = _encryptionService.Hash(newPassword.Trim());
         await _teacherRepository.UpdateTeacherAsync(teacher);
         return true;
     }

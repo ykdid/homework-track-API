@@ -128,7 +128,7 @@ public class StudentService(IStudentRepository studentRepository , IEncryptionSe
             return false;
         }
 
-        student.Password = _encryptionService.Hash(newPassword);
+        student.Password = _encryptionService.Hash(newPassword.Trim());
         await _studentRepository.UpdateStudentAsync(student);
         return true;
     }

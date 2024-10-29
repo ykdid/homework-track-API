@@ -69,7 +69,7 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
         {
             throw new InvalidOperationException("Homework due date cannot be in the past.");
         }
-
+        
         homework.Status = HomeworkStatus.Active;
         homework.CourseId = courseId;
         homework.InitialDate = DateTime.UtcNow;
@@ -124,7 +124,7 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
 
         if (!string.IsNullOrEmpty(homework.Title))
         {
-            existingHomework.Title = homework.Title;
+            existingHomework.Title = homework.Title.Trim();
         }
         
         if (homework.ExpireDate != DateTime.MinValue)
@@ -133,7 +133,7 @@ public class HomeworkService(IHomeworkRepository homeworkRepository , ICourseRep
         }
 
         existingHomework.Description = !string.IsNullOrEmpty(homework.Description)
-            ? homework.Description
+            ? homework.Description.Trim()
             : existingHomework.Description;
         existingHomework.ImagePath = !string.IsNullOrEmpty(homework.ImagePath) ? homework.ImagePath : existingHomework.ImagePath;
         existingHomework.DocumentationPath = !string.IsNullOrEmpty(homework.DocumentationPath) ? homework.DocumentationPath : existingHomework.DocumentationPath;

@@ -148,11 +148,11 @@ public class CourseService(ICourseRepository courseRepository , ITeacherReposito
 
         if (!string.IsNullOrEmpty(course.Name))
         {
-            existedCourse.Name = course.Name;
+            existedCourse.Name = course.Name.Trim();
         }
         
         existedCourse.ImagePath = !string.IsNullOrEmpty(course.ImagePath) ? course.ImagePath : existedCourse.ImagePath;
-        existedCourse.Description = !string.IsNullOrEmpty(course.Description) ? course.Description : existedCourse.Description;
+        existedCourse.Description = !string.IsNullOrEmpty(course.Description) ? course.Description.Trim() : existedCourse.Description;
         
         return await _courseRepository.UpdateCourseAsync(existedCourse);
     }
