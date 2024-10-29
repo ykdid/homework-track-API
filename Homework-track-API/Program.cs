@@ -74,6 +74,13 @@ builder.Services.AddAuthentication(options =>
         
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("TeacherOnly", policy => policy.RequireRole("Teacher"));
+    options.AddPolicy("StudentOnly", policy => policy.RequireRole("Student"));
+    options.AddPolicy("StudentOrTeacher", policy => policy.RequireRole("Student", "Teacher"));
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
