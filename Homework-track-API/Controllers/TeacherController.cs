@@ -20,17 +20,17 @@ namespace Homework_track_API.Controllers{
             try
             {
                 var teachers = await _teacherService.GetAllTeachers();
-                                
+
                 if (teachers.IsNullOrEmpty() || !teachers.Any())
                 {
                     return NoContent();
                 }
 
-                return Ok(teachers);
+                return Ok(new ApiResponse<IEnumerable<Teacher>>(200, teachers, null));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
         
@@ -44,18 +44,18 @@ namespace Homework_track_API.Controllers{
 
                 if (teacher == null)
                 {
-                    return NoContent(); 
+                    return NotFound(new ApiResponse<string>(404, null, "Teacher not found"));
                 }
 
-                return Ok(teacher);
+                return Ok(new ApiResponse<Teacher>(200, teacher, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message); 
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message); 
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
             }
         }
         
@@ -69,14 +69,14 @@ namespace Homework_track_API.Controllers{
 
                 if (result)
                 {
-                    return NoContent();     
+                    return NoContent();
                 }
 
-                return NotFound();
+                return NotFound(new ApiResponse<string>(404, null, "Teacher not found"));
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
             }
         }
         
@@ -87,11 +87,11 @@ namespace Homework_track_API.Controllers{
             try
             {
                 var createdTeacher = await _teacherService.CreateTeacher(teacher);
-                return CreatedAtAction(nameof(GetTeacherById), new { id = createdTeacher.Id }, createdTeacher);
+                return CreatedAtAction(nameof(GetTeacherById), new { id = createdTeacher.Id }, new ApiResponse<Teacher>(201, createdTeacher, null));
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
             }
         }
         
@@ -99,26 +99,23 @@ namespace Homework_track_API.Controllers{
         [HttpPatch("updateTeacherBy/{id}")]
         public async Task<IActionResult> UpdateTeacher(int id, [FromBody] Teacher teacher)
         {
-                        
             if (id != teacher.Id)
             {
-                return BadRequest("Teacher ID mismatch.");
+                return BadRequest(new ApiResponse<string>(400, null, "Teacher ID mismatch."));
             }
 
             try
             {
-
-                var updatedTeacher = await _teacherService.UpdateTeacher(id ,teacher);
-                return Ok(updatedTeacher);
-
+                var updatedTeacher = await _teacherService.UpdateTeacher(id, teacher);
+                return Ok(new ApiResponse<Teacher>(200, updatedTeacher, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
         
@@ -128,25 +125,24 @@ namespace Homework_track_API.Controllers{
         {
             try
             {
-                var result = await _teacherService.ChangePasswordById(id , changePassword.currentPassword, changePassword.newPassword);
+                var result = await _teacherService.ChangePasswordById(id, changePassword.currentPassword, changePassword.newPassword);
 
                 if (result)
                 {
-                    return Ok("Password changed successfully");
+                    return Ok(new ApiResponse<string>(200, "Password changed successfully", null));
                 }
                 else
                 {
-                    return BadRequest("Failed to change password.");
+                    return BadRequest(new ApiResponse<string>(400, null, "Failed to change password."));
                 }
-                
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse<string>(404, null, ex.Message));
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex.Message);
+                return Unauthorized(new ApiResponse<string>(401, null, ex.Message));
             }
         }
     }

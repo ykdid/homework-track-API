@@ -1,3 +1,5 @@
+using Homework_track_API.DTOs;
+using Homework_track_API.Entities;
 using Homework_track_API.Services.StudentCourseService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,21 +19,21 @@ namespace Homework_track_API.Controllers
         {
             if (studentId <= 0 || courseId <= 0)
             {
-                return BadRequest("Invalid studentId or courseId");
+                return BadRequest(new ApiResponse<string>(400, null, "Invalid studentId or courseId"));
             }
 
             try
             {
                 var studentCourse = await _studentCourseService.AddStudentToCourse(studentId, courseId);
-                return Ok(studentCourse);
+                return Ok(new ApiResponse<StudentCourse>(200, studentCourse, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -41,21 +43,21 @@ namespace Homework_track_API.Controllers
         {
             if (studentId <= 0 || courseId <= 0)
             {
-                return BadRequest("Invalid studentId or courseId");
+                return BadRequest(new ApiResponse<string>(400, null, "Invalid studentId or courseId"));
             }
 
             try
             {
                 var studentCourse = await _studentCourseService.RemoveStudentFromCourse(studentId, courseId);
-                return Ok(studentCourse);
+                return Ok(new ApiResponse<bool>(200, true, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -65,21 +67,21 @@ namespace Homework_track_API.Controllers
         {
             if (courseId <= 0)
             {
-                return BadRequest("Invalid courseId");
+                return BadRequest(new ApiResponse<string>(400, null, "Invalid courseId"));
             }
 
             try
             {
                 var students = await _studentCourseService.GetStudentsByCourseId(courseId);
-                return Ok(students);
+                return Ok(new ApiResponse<List<Student>>(200, students, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -89,21 +91,21 @@ namespace Homework_track_API.Controllers
         {
             if (studentId <= 0)
             {
-                return BadRequest("Invalid studentId");
+                return BadRequest(new ApiResponse<string>(400, null, "Invalid studentId"));
             }
 
             try
             {
                 var courses = await _studentCourseService.GetCoursesByStudentId(studentId);
-                return Ok(courses);
+                return Ok(new ApiResponse<List<Course>>(200, courses, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
     }

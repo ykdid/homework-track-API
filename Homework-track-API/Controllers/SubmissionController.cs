@@ -1,3 +1,4 @@
+using Homework_track_API.DTOs;
 using Homework_track_API.Entities;
 using Homework_track_API.Services.SubmissionService;
 using Microsoft.AspNetCore.Authorization;
@@ -18,16 +19,16 @@ namespace Homework_track_API.Controllers{
             {
                 var submissions = await _submissionService.GetAllSubmissions();
 
-                if (submissions == null)
+                if (submissions == null || !submissions.Any())
                 {
                     return NoContent();
                 }
 
-                return Ok(submissions);
+                return Ok(new ApiResponse<List<Submission>>(200, submissions, null));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -44,15 +45,19 @@ namespace Homework_track_API.Controllers{
                     return NoContent();
                 }
 
-                return Ok(submission);
+                return Ok(new ApiResponse<Submission>(200, submission, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message); 
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message); 
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -64,21 +69,24 @@ namespace Homework_track_API.Controllers{
             {
                 var submissions = await _submissionService.GetSubmissionsByStudentId(id);
 
-                if (submissions == null)
+                if (submissions == null || !submissions.Any())
                 {
                     return NoContent();
                 }
-                
-                return Ok(submissions);
-                
+
+                return Ok(new ApiResponse<IEnumerable<Submission>>(200, submissions, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message); 
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message); 
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
         
@@ -90,36 +98,43 @@ namespace Homework_track_API.Controllers{
             {
                 var submissions = await _submissionService.GetSubmissionsByHomeworkId(id);
 
-                if (submissions == null)
+                if (submissions == null || !submissions.Any())
                 {
                     return NoContent();
                 }
-                
-                return Ok(submissions);
-                
+
+                return Ok(new ApiResponse<List<Submission>>(200, submissions, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message); 
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message); 
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
         [Authorize(Policy = "Student")]
         [HttpPost("createSubmissionByStudent/{studentId}")]
-        public async Task<IActionResult> CreateSubmissionByStudentId(int studentId ,Submission submission)
+        public async Task<IActionResult> CreateSubmissionByStudentId(int studentId, Submission submission)
         {
             try
             {
-                var createdSubmission = await _submissionService.CreateSubmissionByStudentId(studentId,submission);
+                var createdSubmission = await _submissionService.CreateSubmissionByStudentId(studentId, submission);
                 return CreatedAtAction(nameof(GetSubmissionById), new { id = createdSubmission.Id }, createdSubmission);
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -140,7 +155,11 @@ namespace Homework_track_API.Controllers{
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -150,21 +169,21 @@ namespace Homework_track_API.Controllers{
         {
             if (id != submission.Id)
             {
-                return BadRequest();
+                return BadRequest(new ApiResponse<string>(400, null, "Submission ID mismatch"));
             }
-            
+    
             try
             {
-                var updatedSubmission = await _submissionService.UpdateSubmission(id,submission);
-                return Ok(submission);
+                var updatedSubmission = await _submissionService.UpdateSubmission(id, submission);
+                return Ok(updatedSubmission);
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -174,23 +193,26 @@ namespace Homework_track_API.Controllers{
         {
             if (submissionId <= 0)
             {
-                 if (mark < 0 || mark > 100)
-                 {
-                     return BadRequest();
-                 }
+                return BadRequest(new ApiResponse<string>(400, null, "Invalid submission ID."));
             }
+
+            if (mark < 0 || mark > 100)
+            {
+                return BadRequest(new ApiResponse<string>(400, null, "Mark must be between 0 and 100."));
+            }
+
             try
             {
-                var submission = await _submissionService.UpdateMarkBySubmissionId(submissionId,mark);
-                return Ok(submission);
+                var submission = await _submissionService.UpdateMarkBySubmissionId(submissionId, mark);
+                return Ok(new ApiResponse<Submission>(200, submission, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404, null, e.Message));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
         

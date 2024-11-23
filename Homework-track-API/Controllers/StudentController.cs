@@ -18,17 +18,17 @@ namespace Homework_track_API.Controllers
             try
             {
                 var students = await _studentService.GetAllStudents();
-                
+
                 if (students == null || !students.Any())
                 {
                     return NoContent();
                 }
 
-                return Ok(students);
+                return Ok(new ApiResponse<IEnumerable<Student>>(200, students, null));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -36,24 +36,33 @@ namespace Homework_track_API.Controllers
         [HttpGet("getStudentBy/{id}")]
         public async Task<IActionResult> GetStudentById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new ApiResponse<string>(400, null, "Invalid Student ID"));
+            }
+
             try
             {
                 var student = await _studentService.GetStudentById(id);
 
                 if (student == null)
                 {
-                    return NoContent();
+                    return NotFound(new ApiResponse<string>(404, null, "Student not found"));
                 }
 
-                return Ok(student);
+                return Ok(new ApiResponse<Student>(200, student, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404, null, $"Student not found: {e.Message}"));
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -61,6 +70,11 @@ namespace Homework_track_API.Controllers
         [HttpDelete("deleteStudentBy/{id}")]
         public async Task<IActionResult> DeleteStudentById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new ApiResponse<string>(400, null, "Invalid Student ID"));
+            }
+
             try
             {
                 var result = await _studentService.DeleteStudentById(id);
@@ -70,11 +84,15 @@ namespace Homework_track_API.Controllers
                     return NoContent();
                 }
 
-                return NotFound();
+                return NotFound(new ApiResponse<string>(404, null, "Student not found"));
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -82,14 +100,23 @@ namespace Homework_track_API.Controllers
         [HttpPost("createStudent")]
         public async Task<IActionResult> CreateStudent(Student student)
         {
+            if (student == null)
+            {
+                return BadRequest(new ApiResponse<string>(400, null, "Student data is null"));
+            }
+
             try
             {
                 var createdStudent = await _studentService.CreateStudent(student);
-                return CreatedAtAction(nameof(GetStudentById), new { id = createdStudent.Id }, createdStudent);
+                return CreatedAtAction(nameof(GetStudentById), new { id = createdStudent.Id }, new ApiResponse<Student>(201, createdStudent, null));
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new ApiResponse<string>(400, null, e.Message));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -99,21 +126,21 @@ namespace Homework_track_API.Controllers
         {
             if (id != student.Id)
             {
-                return BadRequest("Student ID mismatch.");
+                return BadRequest(new ApiResponse<string>(400, null, "Student ID mismatch"));
             }
 
             try
             {
-                var updatedStudent = await _studentService.UpdateStudent(id,student);
-                return Ok(updatedStudent);
+                var updatedStudent = await _studentService.UpdateStudent(id, student);
+                return Ok(new ApiResponse<Student>(200, updatedStudent, null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404, null, $"Student not found: {e.Message}"));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {e.Message}"));
             }
         }
 
@@ -121,27 +148,35 @@ namespace Homework_track_API.Controllers
         [HttpPatch("changeStudentPasswordBy/{id}")]
         public async Task<IActionResult> ChangePasswordById(int id, [FromBody] ChangePassword changePassword)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new ApiResponse<string>(400, null, "Invalid Student ID"));
+            }
+
             try
             {
-                var result = await _studentService.ChangePasswordById(id , changePassword.currentPassword, changePassword.newPassword);
+                var result = await _studentService.ChangePasswordById(id, changePassword.currentPassword, changePassword.newPassword);
 
                 if (result)
                 {
-                    return Ok("Password changed successfully");
+                    return Ok(new ApiResponse<string>(200, "Password changed successfully", null));
                 }
                 else
                 {
-                    return BadRequest("Failed to change password.");
+                    return BadRequest(new ApiResponse<string>(400, null, "Failed to change password."));
                 }
-                
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ApiResponse<string>(404, null, ex.Message));
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex.Message);
+                return Unauthorized(new ApiResponse<string>(401, null, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Internal server error: {ex.Message}"));
             }
         }
     }

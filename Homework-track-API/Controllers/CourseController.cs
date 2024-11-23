@@ -1,3 +1,4 @@
+using Homework_track_API.DTOs;
 using Homework_track_API.Entities;
 using Homework_track_API.Services.CourseService;
 using Microsoft.AspNetCore.Authorization;
@@ -18,15 +19,15 @@ namespace Homework_track_API.Controllers
             try
             {
                 var courses = await _courseService.GetAllCourses();
-                return Ok(courses);
+                return Ok(new ApiResponse<List<Course>>(200,courses,null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404,null,$"Not Found: {e.Message}"));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
             }
         }
         
@@ -36,21 +37,21 @@ namespace Homework_track_API.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid course ID.");
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Course Id"));
             }
 
             try
             {
                 var course = await _courseService.GetCourseById(id);
-                return Ok(course);
+                return Ok(new ApiResponse<Course>(200,course,null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404,null,$"Not Found: {e.Message}"));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
             }
         }
         
@@ -60,21 +61,21 @@ namespace Homework_track_API.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid teacher ID.");
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Teacher Id"));
             }
 
             try
             {
                 var courses = await _courseService.GetCoursesByTeacherId(id);
-                return Ok(courses);
+                return Ok(new ApiResponse<List<Course>>(200,courses,null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404,null,$"Not Found: {e.Message}"));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
             }
         }
 
@@ -84,17 +85,17 @@ namespace Homework_track_API.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid teacher ID.");
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Teacher Id"));
             }
 
             try
             {
                 var createdCourse = await _courseService.CreateCourseByTeacherId(id , course);
-                return Ok(createdCourse);
+                return Ok(new ApiResponse<Course>(200,createdCourse,null));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
             }
         }
 
@@ -104,21 +105,23 @@ namespace Homework_track_API.Controllers
         {
             if (code.Length !=  10)
             {
-                return BadRequest("Course code should be 10 characters.");
+                return BadRequest(new ApiResponse<string>(400,null,"Code length is not enough"));
             }
 
             try
             {
                 var course = await _courseService.GetCourseByCode(code);
-                return Ok(course);
+                return Ok(new ApiResponse<Course>(200,course,null));
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ApiResponse<string>(404,null,$"Not Found: {e.Message}")
+
+                );
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
             }
         }
 
@@ -128,17 +131,17 @@ namespace Homework_track_API.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid ID.");
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Course Id"));
             }
             
             try
             {
                 var updatedCourse = await _courseService.UpdateCourseById(id, course);
-                return Ok(updatedCourse);
+                return Ok(new ApiResponse<Course>(200,updatedCourse,null));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
             }
         }
 
@@ -148,17 +151,17 @@ namespace Homework_track_API.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid course ID.");
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Course Id"));
             }
 
             try
             {
                 var result = await _courseService.SoftDeleteCourseById(id);
-                return Ok(result);
+                return Ok(new ApiResponse<bool>(200,true,null));
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
             }
         }
 
@@ -168,17 +171,18 @@ namespace Homework_track_API.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid course ID.");
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Course Id"));
             }
 
             try
             {
                 var result = await _courseService.ArchiveCourseById(id);
-                return Ok(result);
+                return Ok(new ApiResponse<bool>(200,true,null)
+                );
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
             }
         }
 
@@ -188,12 +192,12 @@ namespace Homework_track_API.Controllers
         {
             if (teacherId <= 0)
             {
-                return BadRequest("Invalid teacher ID.");
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Teacher Id"));
             }
 
             if (courseName.Length == 0)
             {
-                return BadRequest("Need input character.");
+                return BadRequest(new ApiResponse<string>(400,null,"Need Input Character"));
             }
 
             try
@@ -201,13 +205,13 @@ namespace Homework_track_API.Controllers
                 var courses = await _courseService.FindCoursesByTeacherId(teacherId, courseName);
                 if (courses == null || !courses.Any())
                 {
-                    return NotFound("Not Found");
+                    return NotFound(new ApiResponse<string>(404,null,"Not Found"));
                 }
-                return Ok(courses);
+                return Ok(new ApiResponse<IEnumerable<Course>>(200,courses,null));
             }   
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
             }
         }
         
@@ -217,12 +221,12 @@ namespace Homework_track_API.Controllers
         {
             if (studentId <= 0)
             {
-                return BadRequest("Invalid student ID.");
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Student Id"));
             }
 
             if (courseName.Length == 0)
             {
-                return BadRequest("Need input character.");
+                return BadRequest(new ApiResponse<string>(400,null,"Need Input Character"));
             }
 
             try
@@ -230,13 +234,13 @@ namespace Homework_track_API.Controllers
                 var courses = await _courseService.FindCoursesByStudentId(studentId, courseName);
                 if (courses == null || !courses.Any())
                 {
-                    return NotFound("Not Found");
+                    return NotFound(new ApiResponse<string>(404,null,"Not Found"));
                 }
-                return Ok(courses);
+                return Ok(new ApiResponse<IEnumerable<Course>>(200,courses,null));
             }   
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e.Message}");
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
             }
         }
     }
