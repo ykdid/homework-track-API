@@ -81,7 +81,7 @@ namespace Homework_track_API.Controllers
 
         [Authorize(Policy = "TeacherOnly")]
         [HttpPost("createCourseByTeacher/{id}")]
-        public async Task<IActionResult> CreateCourseByTeacherId(int id , [FromBody] Course course)
+        public async Task<IActionResult> CreateCourseByTeacherId(int id , [FromBody] CreateCourse courseDto)
         {
             if (id <= 0)
             {
@@ -90,7 +90,7 @@ namespace Homework_track_API.Controllers
 
             try
             {
-                var createdCourse = await _courseService.CreateCourseByTeacherId(id , course);
+                var createdCourse = await _courseService.CreateCourseByTeacherId(id , courseDto);
                 return Ok(new ApiResponse<Course>(200,createdCourse,null));
             }
             catch (Exception e)

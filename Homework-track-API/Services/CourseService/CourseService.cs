@@ -1,3 +1,4 @@
+using Homework_track_API.DTOs;
 using Homework_track_API.Entities;
 using Homework_track_API.Enums;
 using Homework_track_API.Repositories.CourseRepository;
@@ -59,30 +60,27 @@ public class CourseService(ICourseRepository courseRepository , ITeacherReposito
         return courses;
     }
 
-    public async Task<Course> CreateCourseByTeacherId(int id,Course course)
+    public async Task<Course> CreateCourseByTeacherId(int id, CreateCourse courseDto)
     {
-        if (id != course.TeacherId)
+        if (id != courseDto.TeacherId)
         {
             throw new Exception("Id and TeacherId did not match.");
         }
-        if (course == null)
+        
+        if (string.IsNullOrEmpty(courseDto.Name) || courseDto.Name.Length < 3)
         {
-            throw new ArgumentNullException(nameof(course));
+            throw new ArgumentException("Course should have a valid name.");
         }
 
-        if (course.TeacherId <= 0)
+        var course = new Course
         {
-            throw new ArgumentException("Teacher could not found.");
-        }
-
-        if (string.IsNullOrEmpty(course.Name) && course.Name.Length < 3)
-        {
-            throw new ArgumentException("Course should be has a name.");
-        }
-
-        course.Code = await GenerateUniqueCourseCodeAsync();
-
-        course.Status = CourseStatus.Active;
+            TeacherId = courseDto.TeacherId,
+            Name = courseDto.Name,
+            Description = courseDto.Description,
+            ImagePath = courseDto.ImagePath,
+            Code = await GenerateUniqueCourseCodeAsync(),
+            Status = CourseStatus.Active
+        };
 
         return await _courseRepository.CreateCourseAsync(course);
         
