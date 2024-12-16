@@ -29,12 +29,27 @@ public class CourseRepository:ICourseRepository
         return course;
     }
 
-    public async Task<List<Course>> GetCoursesByTeacherId(int id)
+    public async Task<List<Course>> GetActiveCoursesByTeacherId(int id)
     {
         return await _context.Courses
-            .Where(c => c.TeacherId == id)
+            .Where(c => c.TeacherId == id && c.Status == CourseStatus.Active)
             .ToListAsync();
     }
+
+    public async Task<List<Course>> GetArchivedCoursesByTeacherId(int id)
+    {
+        return await _context.Courses
+            .Where(c => c.TeacherId == id && c.Status == CourseStatus.Archived)
+            .ToListAsync();
+    }
+
+    public async Task<List<Course>> GetDeletedCoursesByTeacherId(int id)
+    {
+        return await _context.Courses
+            .Where(c => c.TeacherId == id && c.Status == CourseStatus.Deleted)
+            .ToListAsync();
+    }
+    
     
     public async Task<Course> CreateCourseAsync(Course course)
     {

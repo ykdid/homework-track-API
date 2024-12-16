@@ -56,8 +56,8 @@ namespace Homework_track_API.Controllers
         }
         
         [Authorize(Policy = "TeacherOnly")]
-        [HttpGet("getCoursesByTeacher/{id}")]
-        public async Task<IActionResult> GetCoursesByTeacherId(int id)
+        [HttpGet("getActiveCoursesByTeacher/{id}")]
+        public async Task<IActionResult> GetActiveCoursesByTeacherId(int id)
         {
             if (id <= 0)
             {
@@ -66,7 +66,55 @@ namespace Homework_track_API.Controllers
 
             try
             {
-                var courses = await _courseService.GetCoursesByTeacherId(id);
+                var courses = await _courseService.GetActiveCoursesByTeacherId(id);
+                return Ok(new ApiResponse<List<Course>>(200,courses,null));
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(new ApiResponse<string>(404,null,$"Not Found: {e.Message}"));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
+            }
+        }
+        
+        [Authorize(Policy = "TeacherOnly")]
+        [HttpGet("getArchivedCoursesByTeacher/{id}")]
+        public async Task<IActionResult> GetArchivedCoursesByTeacherId(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Teacher Id"));
+            }
+
+            try
+            {
+                var courses = await _courseService.GetArchivedCoursesByTeacherId(id);
+                return Ok(new ApiResponse<List<Course>>(200,courses,null));
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(new ApiResponse<string>(404,null,$"Not Found: {e.Message}"));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
+            }
+        }
+        
+        [Authorize(Policy = "TeacherOnly")]
+        [HttpGet("getDeletedCoursesByTeacher/{id}")]
+        public async Task<IActionResult> GetDeletedCoursesByTeacherId(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Teacher Id"));
+            }
+
+            try
+            {
+                var courses = await _courseService.GetDeletedCoursesByTeacherId(id);
                 return Ok(new ApiResponse<List<Course>>(200,courses,null));
             }
             catch (KeyNotFoundException e)

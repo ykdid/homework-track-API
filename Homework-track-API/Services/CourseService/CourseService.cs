@@ -36,7 +36,7 @@ public class CourseService(ICourseRepository courseRepository , ITeacherReposito
         return course;
     }
 
-    public async Task<List<Course>> GetCoursesByTeacherId(int id)
+    public async Task<List<Course>> GetActiveCoursesByTeacherId(int id)
     {
         if (id <= 0)
         {
@@ -50,7 +50,55 @@ public class CourseService(ICourseRepository courseRepository , ITeacherReposito
             throw new KeyNotFoundException($"Teacher with ID {id} not found.");
         }
 
-        var courses = await _courseRepository.GetCoursesByTeacherId(id);
+        var courses = await _courseRepository.GetActiveCoursesByTeacherId(id);
+
+        if (courses.Count == 0)
+        {
+            throw new Exception("Empty course list.");
+        }
+
+        return courses;
+    }
+    
+    public async Task<List<Course>> GetArchivedCoursesByTeacherId(int id)
+    {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid teacher ID.");
+        }
+
+        var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+
+        if (teacher == null)
+        {
+            throw new KeyNotFoundException($"Teacher with ID {id} not found.");
+        }
+
+        var courses = await _courseRepository.GetArchivedCoursesByTeacherId(id);
+
+        if (courses.Count == 0)
+        {
+            throw new Exception("Empty course list.");
+        }
+
+        return courses;
+    }
+    
+    public async Task<List<Course>> GetDeletedCoursesByTeacherId(int id)
+    {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Invalid teacher ID.");
+        }
+
+        var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+
+        if (teacher == null)
+        {
+            throw new KeyNotFoundException($"Teacher with ID {id} not found.");
+        }
+
+        var courses = await _courseRepository.GetDeletedCoursesByTeacherId(id);
 
         if (courses.Count == 0)
         {
