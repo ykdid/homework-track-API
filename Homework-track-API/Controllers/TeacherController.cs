@@ -14,7 +14,7 @@ namespace Homework_track_API.Controllers{
     {
         private readonly ITeacherService _teacherService = teacherService;
         
-        [HttpGet("getAllTeachers")]
+        [HttpGet("teachers")]
         public async Task<IActionResult> GetAllTeachers()
         {
             try
@@ -35,7 +35,7 @@ namespace Homework_track_API.Controllers{
         }
         
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpGet("getTeacherBy/{id}")]
+        [HttpGet("/{id}")]
         public async Task<IActionResult> GetTeacherById(int id)
         {
             try
@@ -60,7 +60,7 @@ namespace Homework_track_API.Controllers{
         }
         
         [Authorize(Policy = "Teacher")]
-        [HttpDelete("deleteTeacherBy/{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteTeacherById(int id)
         {
             try
@@ -81,7 +81,7 @@ namespace Homework_track_API.Controllers{
         }
         
         [Authorize(Policy = "Teacher")]
-        [HttpPost("createTeacher")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateTeacher(Teacher teacher)
         {
             try
@@ -96,7 +96,7 @@ namespace Homework_track_API.Controllers{
         }
         
         [Authorize(Policy = "Teacher")]
-        [HttpPatch("updateTeacherBy/{id}")]
+        [HttpPatch("update/{id}")]
         public async Task<IActionResult> UpdateTeacher(int id, [FromBody] Teacher teacher)
         {
             if (id != teacher.Id)
@@ -120,7 +120,7 @@ namespace Homework_track_API.Controllers{
         }
         
         [Authorize(Policy = "Teacher")]
-        [HttpPatch("changeTeacherPasswordBy/{id}")]
+        [HttpPatch("change-password/{id}")]
         public async Task<IActionResult> ChangePasswordById(int id, [FromBody] ChangePassword changePassword)
         {
             try

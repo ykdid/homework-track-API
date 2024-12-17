@@ -14,7 +14,7 @@ namespace Homework_track_API.Controllers
         private IStudentCourseService _studentCourseService = studentCourseService;
         
         [Authorize(Policy = "Student")]
-        [HttpPost("addStudentToCourseBy/{studentId}/{courseId}")]
+        [HttpPost("add-student/{studentId}/{courseId}")]
         public async Task<IActionResult> AddStudentToCourse(int studentId, int courseId)
         {
             if (studentId <= 0 || courseId <= 0)
@@ -38,7 +38,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpDelete("removeStudentFromCourseBy/{studentId}/{courseId}")]
+        [HttpDelete("remove-student/{studentId}/{courseId}")]
         public async Task<IActionResult> RemoveStudentFromCourse(int studentId, int courseId)
         {
             if (studentId <= 0 || courseId <= 0)
@@ -62,7 +62,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpGet("getStudentsByCourse/{courseId}")]
+        [HttpGet("students/course/{courseId}")]
         public async Task<IActionResult> GetStudentsByCourseId(int courseId)
         {
             if (courseId <= 0)
@@ -86,7 +86,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "Student")]
-        [HttpGet("getCoursesByStudent/{studentId}")]
+        [HttpGet("courses/student/{studentId}")]
         public async Task<IActionResult> GetCoursesByStudentId(int studentId)
         {
             if (studentId <= 0)

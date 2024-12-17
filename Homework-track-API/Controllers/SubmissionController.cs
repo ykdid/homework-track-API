@@ -12,7 +12,7 @@ namespace Homework_track_API.Controllers{
     {
         private readonly ISubmissionService _submissionService = submissionService;
         
-        [HttpGet("getAllSubmissions")]
+        [HttpGet("submissions")]
         public async Task<IActionResult> GetAllSubmissions()
         {
             try
@@ -33,7 +33,7 @@ namespace Homework_track_API.Controllers{
         }
 
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpGet("getSubmissionBy/{id}")]
+        [HttpGet("/{id}")]
         public async Task<IActionResult> GetSubmissionById(int id)
         {
             try
@@ -62,7 +62,7 @@ namespace Homework_track_API.Controllers{
         }
 
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpGet("getSubmissionsByStudent/{id}")]
+        [HttpGet("submissions/student/{id}")]
         public async Task<IActionResult> GetSubmissionsByStudentId(int id)
         {
             try
@@ -91,7 +91,7 @@ namespace Homework_track_API.Controllers{
         }
         
         [Authorize(Policy = "Teacher")]
-        [HttpGet("getSubmissionsByHomework/{id}")]
+        [HttpGet("submissions/homework/{id}")]
         public async Task<IActionResult> GetSubmissionsByHomeworkId(int id)
         {
             try
@@ -120,7 +120,7 @@ namespace Homework_track_API.Controllers{
         }
 
         [Authorize(Policy = "Student")]
-        [HttpPost("createSubmissionByStudent/{studentId}")]
+        [HttpPost("create-submission/student/{studentId}")]
         public async Task<IActionResult> CreateSubmissionByStudentId(int studentId, Submission submission)
         {
             try
@@ -139,7 +139,7 @@ namespace Homework_track_API.Controllers{
         }
 
         [Authorize(Policy = "Student")]
-        [HttpDelete("deleteSubmissionBy/{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteSubmissionById(int id)
         {
             try
@@ -164,7 +164,7 @@ namespace Homework_track_API.Controllers{
         }
 
         [Authorize(Policy = "Student")]
-        [HttpPatch("updateSubmissionBy/{id}")]
+        [HttpPatch("update/{id}")]
         public async Task<IActionResult> UpdateSubmissionById(int id, [FromBody] Submission submission)
         {
             if (id != submission.Id)
@@ -188,7 +188,7 @@ namespace Homework_track_API.Controllers{
         }
 
         [Authorize(Policy = "Teacher")]
-        [HttpPatch("updateMarkBySubmission{submissionId}")]
+        [HttpPatch("mark/{submissionId}")]
         public async Task<IActionResult> UpdateMarkBySubmissionId(int submissionId, int mark)
         {
             if (submissionId <= 0)

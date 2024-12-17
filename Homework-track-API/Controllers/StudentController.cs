@@ -12,7 +12,7 @@ namespace Homework_track_API.Controllers
     {
         private readonly IStudentService _studentService = studentService;
         
-        [HttpGet("getAllStudents")]
+        [HttpGet("students")]
         public async Task<IActionResult> GetAllStudents()
         {
             try
@@ -33,7 +33,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpGet("getStudentBy/{id}")]
+        [HttpGet("/{id}")]
         public async Task<IActionResult> GetStudentById(int id)
         {
             if (id <= 0)
@@ -67,7 +67,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "Student")]
-        [HttpDelete("deleteStudentBy/{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteStudentById(int id)
         {
             if (id <= 0)
@@ -97,7 +97,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "Student")]
-        [HttpPost("createStudent")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateStudent(Student student)
         {
             if (student == null)
@@ -121,7 +121,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "Student")]
-        [HttpPatch("updateStudentBy/{id}")]
+        [HttpPatch("update/{id}")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] Student student)
         {
             if (id != student.Id)
@@ -145,7 +145,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "Student")]
-        [HttpPatch("changeStudentPasswordBy/{id}")]
+        [HttpPatch("change-password/{id}")]
         public async Task<IActionResult> ChangePasswordById(int id, [FromBody] ChangePassword changePassword)
         {
             if (id <= 0)

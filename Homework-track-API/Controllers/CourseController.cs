@@ -13,7 +13,7 @@ namespace Homework_track_API.Controllers
     {
         private readonly ICourseService _courseService = courseService;
         
-        [HttpGet("getAllCourses")]
+        [HttpGet("courses")]
         public async Task<IActionResult> GetAllCourses()
         {
             try
@@ -32,7 +32,7 @@ namespace Homework_track_API.Controllers
         }
         
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpGet("getCourseBy/{id}")]
+        [HttpGet("course/{id}")]
         public async Task<IActionResult> GetCourseById(int id)
         {
             if (id <= 0)
@@ -56,7 +56,7 @@ namespace Homework_track_API.Controllers
         }
         
         [Authorize(Policy = "TeacherOnly")]
-        [HttpGet("getActiveCoursesByTeacher/{id}")]
+        [HttpGet("teacher/{id}")]
         public async Task<IActionResult> GetActiveCoursesByTeacherId(int id)
         {
             if (id <= 0)
@@ -80,7 +80,7 @@ namespace Homework_track_API.Controllers
         }
         
         [Authorize(Policy = "TeacherOnly")]
-        [HttpGet("getArchivedCoursesByTeacher/{id}")]
+        [HttpGet("archived/teacher/{id}")]
         public async Task<IActionResult> GetArchivedCoursesByTeacherId(int id)
         {
             if (id <= 0)
@@ -104,7 +104,7 @@ namespace Homework_track_API.Controllers
         }
         
         [Authorize(Policy = "TeacherOnly")]
-        [HttpGet("getDeletedCoursesByTeacher/{id}")]
+        [HttpGet("deleted/teacher/{id}")]
         public async Task<IActionResult> GetDeletedCoursesByTeacherId(int id)
         {
             if (id <= 0)
@@ -128,7 +128,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "TeacherOnly")]
-        [HttpPost("createCourseByTeacher/{id}")]
+        [HttpPost("create/teacher/{id}")]
         public async Task<IActionResult> CreateCourseByTeacherId(int id , [FromBody] CreateCourse courseDto)
         {
             if (id <= 0)
@@ -148,7 +148,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "StudentOnly")]
-        [HttpGet("getCourseByCode/{code}")]
+        [HttpGet("code/{code}")]
         public async Task<IActionResult> GetCourseByCode(string code)
         {
             if (code.Length !=  10)
@@ -174,7 +174,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "TeacherOnly")]
-        [HttpPatch("updateCourseBy/{id}")]
+        [HttpPatch("update/{id}")]
         public async Task<IActionResult> UpdateCourseById(int id , Course course)
         {
             if (id <= 0)
@@ -194,7 +194,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "TeacherOnly")]
-        [HttpPatch("softDeleteCourseBy/{id}")]
+        [HttpPatch("delete/{id}")]
         public async Task<IActionResult> SoftDeleteCourseById(int id)
         {
             if (id <= 0)
@@ -214,7 +214,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "TeacherOnly")]
-        [HttpPatch("archiveCourseBy/{id}")]
+        [HttpPatch("archive/{id}")]
         public async Task<IActionResult> ArchiveCourseById(int id)
         {
             if (id <= 0)
@@ -235,7 +235,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "TeacherOnly")]
-        [HttpGet("findCoursesByTeacher/{teacherId}")]
+        [HttpGet("find-course/teacher/{teacherId}")]
         public async Task<IActionResult> FindCoursesByTeacherId(int teacherId, string courseName)
         {
             if (teacherId <= 0)
@@ -264,7 +264,7 @@ namespace Homework_track_API.Controllers
         }
         
         [Authorize(Policy = "StudentOnly")]
-        [HttpGet("findCoursesByStudent/{studentId}")]
+        [HttpGet("find-course/student/{studentId}")]
         public async Task<IActionResult> FindCoursesByStudentId(int studentId, string courseName)
         {
             if (studentId <= 0)

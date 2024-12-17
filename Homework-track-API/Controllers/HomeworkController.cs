@@ -13,7 +13,7 @@ namespace Homework_track_API.Controllers
     {
         private readonly IHomeworkService _homeworkService = homeworkService;
 
-        [HttpGet("getAllHomeworks")]
+        [HttpGet("homeworks")]
         public async Task<IActionResult> GetAllHomeworks()
         {
             try
@@ -34,7 +34,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpGet("getHomeworkBy/{id}")]
+        [HttpGet("/{id}")]
         public async Task<IActionResult> GetHomeworkById(int id)
         {
             if (id <= 0)
@@ -68,7 +68,7 @@ namespace Homework_track_API.Controllers
         }
         
         [Authorize(Policy = "Teacher")]
-        [HttpPost("createHomeworkByCourse/{courseId}")]
+        [HttpPost("create/course/{courseId}")]
         public async Task<IActionResult> CreateHomeworkByCourseId(int courseId, Homework homework)
         {
             if (courseId <= 0)
@@ -97,7 +97,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "Teacher")]
-        [HttpPatch("updateHomeworkBy/{id}")]
+        [HttpPatch("update/{id}")]
         public async Task<IActionResult> UpdateHomeworkById(int id, [FromBody] Homework homework)
         {
             if (id != homework.Id)
@@ -121,7 +121,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "Teacher")]
-        [HttpPatch("softDeleteHomeworkBy/{id}")]
+        [HttpPatch("delete/{id}")]
         public async Task<IActionResult> SoftDeleteHomeworkById(int id)
         {
             if (id <= 0)
@@ -150,7 +150,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpGet("getHomeworksByCourse/{id}")]
+        [HttpGet("course/{id}")]
         public async Task<IActionResult> GetHomeworksByCourseId(int id)
         {
             if (id <= 0)
@@ -179,7 +179,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "Teacher")]
-        [HttpGet("getExpiredHomeworksByCourse/{id}")]
+        [HttpGet("expired/course/{id}")]
         public async Task<IActionResult> GetExpiredHomeworksByCourseId(int id)
         {
             if (id <= 0)
