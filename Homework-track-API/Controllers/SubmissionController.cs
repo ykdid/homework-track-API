@@ -33,7 +33,7 @@ namespace Homework_track_API.Controllers{
         }
 
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpGet("/{id}")]
+        [HttpGet("submission/{id}")]
         public async Task<IActionResult> GetSubmissionById(int id)
         {
             try

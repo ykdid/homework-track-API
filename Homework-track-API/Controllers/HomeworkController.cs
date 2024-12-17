@@ -34,7 +34,7 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "StudentOrTeacher")]
-        [HttpGet("/{id}")]
+        [HttpGet("homework/{id}")]
         public async Task<IActionResult> GetHomeworkById(int id)
         {
             if (id <= 0)
