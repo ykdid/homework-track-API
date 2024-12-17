@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Homework_track_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/student")]
     [ApiController]
     public class StudentController(IStudentService studentService) : ControllerBase
     {

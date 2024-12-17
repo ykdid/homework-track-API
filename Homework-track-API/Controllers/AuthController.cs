@@ -4,7 +4,7 @@ using Homework_track_API.DTOs;
 
 namespace Homework_track_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     
     public class AuthController(IAuthService authService): ControllerBase

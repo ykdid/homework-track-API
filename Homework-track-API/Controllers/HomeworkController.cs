@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Homework_track_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/homework")]
     [ApiController]
     public class HomeworkController(IHomeworkService homeworkService):ControllerBase
     {
