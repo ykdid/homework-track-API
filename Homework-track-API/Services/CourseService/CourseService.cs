@@ -52,10 +52,10 @@ public class CourseService(ICourseRepository courseRepository , ITeacherReposito
 
         var courses = await _courseRepository.GetActiveCoursesByTeacherId(id);
 
-        if (courses.Count == 0)
-        {
-            throw new Exception("Empty course list.");
-        }
+        // if (courses.Count == 0)
+        // {
+        //     throw new Exception("Empty course list.");
+        // }
 
         return courses;
     }
@@ -76,10 +76,10 @@ public class CourseService(ICourseRepository courseRepository , ITeacherReposito
 
         var courses = await _courseRepository.GetArchivedCoursesByTeacherId(id);
 
-        if (courses.Count == 0)
-        {
-            throw new Exception("Empty course list.");
-        }
+        // if (courses.Count == 0)
+        // {
+        //     throw new Exception("Empty course list.");
+        // }
 
         return courses;
     }
@@ -100,10 +100,10 @@ public class CourseService(ICourseRepository courseRepository , ITeacherReposito
 
         var courses = await _courseRepository.GetDeletedCoursesByTeacherId(id);
 
-        if (courses.Count == 0)
-        {
-            throw new Exception("Empty course list.");
-        }
+        // if (courses.Count == 0)
+        // {
+        //     throw new Exception("Empty course list.");
+        // }
 
         return courses;
     }
