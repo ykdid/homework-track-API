@@ -1,5 +1,6 @@
 using Homework_track_API.DTOs;
 using Homework_track_API.Entities;
+using Homework_track_API.Enums;
 using Homework_track_API.Services.CourseService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -194,47 +195,6 @@ namespace Homework_track_API.Controllers
         }
 
         [Authorize(Policy = "TeacherOnly")]
-        [HttpPatch("delete/{id}")]
-        public async Task<IActionResult> SoftDeleteCourseById(int id)
-        {
-            if (id <= 0)
-            {
-                return BadRequest(new ApiResponse<string>(400,null,"Invalid Course Id"));
-            }
-
-            try
-            {
-                var result = await _courseService.SoftDeleteCourseById(id);
-                return Ok(new ApiResponse<bool>(200,true,null));
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
-            }
-        }
-
-        [Authorize(Policy = "TeacherOnly")]
-        [HttpPatch("archive/{id}")]
-        public async Task<IActionResult> ArchiveCourseById(int id)
-        {
-            if (id <= 0)
-            {
-                return BadRequest(new ApiResponse<string>(400,null,"Invalid Course Id"));
-            }
-
-            try
-            {
-                var result = await _courseService.ArchiveCourseById(id);
-                return Ok(new ApiResponse<bool>(200,true,null)
-                );
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
-            }
-        }
-
-        [Authorize(Policy = "TeacherOnly")]
         [HttpGet("find-course/teacher/{teacherId}")]
         public async Task<IActionResult> FindCoursesByTeacherId(int teacherId, string courseName)
         {
@@ -286,6 +246,31 @@ namespace Homework_track_API.Controllers
                 }
                 return Ok(new ApiResponse<IEnumerable<Course>>(200,courses,null));
             }   
+            catch (Exception e)
+            {
+                return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));
+            }
+        }
+
+        [Authorize(Policy = "TeacherOnly")]
+        [HttpPatch("change-status/course/{courseId}")]
+        public async Task<IActionResult> ChangeCourseStatus(int courseId, CourseStatus newStatus)
+        {
+            if (courseId <= 0)
+            {
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Student Id"));
+            }
+            
+            if (!Enum.IsDefined(typeof(CourseStatus),newStatus))
+            {
+                return BadRequest(new ApiResponse<string>(400,null,"Invalid Status Type"));
+            }
+
+            try
+            {
+                var result = await _courseService.ChangeCourseStatus(courseId, newStatus);
+                return Ok(new ApiResponse<bool>(200, true, null));
+            }
             catch (Exception e)
             {
                 return StatusCode(500, new ApiResponse<string>(500,null,$"Internal server error: {e.Message}"));

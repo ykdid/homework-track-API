@@ -205,49 +205,7 @@ public class CourseService(ICourseRepository courseRepository , ITeacherReposito
         return await _courseRepository.UpdateCourseAsync(existedCourse);
     }
 
-    public async Task<bool> SoftDeleteCourseById(int id)
-    {
-        if (id <= 0)
-        {
-            throw new ArgumentException("Invalid course ID.");
-        }
-
-        var existingCourse = await _courseRepository.GetCourseByIdAsync(id);
-
-        if (existingCourse == null)
-        {
-            throw new ArgumentNullException(nameof(existingCourse));
-        }
-
-        if (existingCourse.Status == CourseStatus.Deleted)
-        {
-            throw new ArgumentException("Course is already deleted.");
-        }
-
-        return await _courseRepository.SoftDeleteCourseByIdAsync(id);
-    }
-
-    public async Task<bool> ArchiveCourseById(int id)
-    {
-        if (id <= 0)
-        {
-            throw new ArgumentException("Invalid course ID.");
-        }
-        
-        var existingCourse = await _courseRepository.GetCourseByIdAsync(id);
-
-        if (existingCourse == null)
-        {
-            throw new ArgumentNullException(nameof(existingCourse));
-        }
-
-        if (existingCourse.Status == CourseStatus.Archived)
-        {
-            throw new InvalidOperationException("Course is already archived.");
-        }
-
-        return await _courseRepository.ArchiveCourseByIdAsync(id);
-    }
+    
 
     public async Task<IEnumerable<Course?>> FindCoursesByTeacherId(int teacherId, string courseName)
     {
@@ -291,5 +249,30 @@ public class CourseService(ICourseRepository courseRepository , ITeacherReposito
         }
 
         return await _courseRepository.FindCoursesByStudentIdAsync(studentId, courseName);
+    }
+
+    public async Task<bool> ChangeCourseStatus(int courseId , CourseStatus newStatus)
+    {
+        var course = await _courseRepository.GetCourseByIdAsync(courseId);
+
+        if (course == null)
+        {
+            throw new ArgumentNullException(nameof(course));
+        }
+
+        if (!Enum.IsDefined(typeof(CourseStatus),newStatus))
+        {
+            throw new ArgumentException($"Invalid course status: {newStatus}");
+        }
+        
+        if (course.Status == CourseStatus.Deleted && newStatus == CourseStatus.Active)
+        {
+            throw new InvalidOperationException("Cannot change status from Deleted to Active.");
+        }
+
+        course.Status = newStatus;
+        await _courseRepository.UpdateCourseAsync(course);
+
+        return true;
     }
 }
